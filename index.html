@@ -6,6 +6,12 @@
     <title>Webcam Capture App</title>
     <link rel="stylesheet" href="style.css">
 </head>
+<body>
+
+    <!-- Loading Screen -->
+    <div id="loadingScreen">
+        <div class="loading-text">Loading...</div>
+    </div>
 
     <!-- Main Content -->
     <div class="container">
@@ -23,7 +29,7 @@
         <div class="controls">
             <button id="switchCamera">Switch Camera</button>
             <button id="captureButton">Capture</button>
-            <button id="downloadButton" style="display:none;">Download</button>
+            <button id="downloadButton">Download</button>
             <button id="startRecordingButton">Start Recording</button>
             <button id="stopRecordingButton" style="display:none;">Stop Recording</button>
         </div>
@@ -45,19 +51,20 @@
             </select>
         </div>
 
-        <!-- Timer & Recorded Video Section -->
-        <div class="recorded-video">
-            <h3>Recorded Video</h3>
-            <video id="recordedVideo" controls></video>
-            <p id="timer">00:00</p>
+        <!-- Captured Images Section -->
+        <div class="captured-images">
+            <h3>Captured Images</h3>
+            <div id="capturedImagesContainer"></div>
         </div>
 
         <!-- PiP Mode -->
         <div class="pip-container">
             <button id="pipButton">Picture-in-Picture</button>
         </div>
+   
     </div>
 
     <script src="script.js"></script>
 </body>
-</html>
+    </html>
+    
