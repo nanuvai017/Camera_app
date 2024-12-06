@@ -1,69 +1,104 @@
-/* Reset */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
 body {
     font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     background-color: #f4f4f4;
-    color: #333;
-    text-align: center;
-    padding: 20px;
+    color: #000;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 nav {
-    background-color: #333;
-    color: white;
-    padding: 10px;
-    font-size: 1.5rem;
+    position: absolute;
+    top: 10px;
+    right: 10px;
 }
 
-.container {
-    margin-top: 20px;
+h1 {
+    margin-top: 60px;
 }
 
-video {
+video, canvas {
     width: 100%;
-    max-width: 600px;
+    max-width: 500px;
     border: 2px solid #000;
-    border-radius: 8px;
-    margin: 20px 0;
+    margin: 10px 0;
 }
 
-button, select, input {
+button {
     padding: 10px 20px;
-    font-size: 16px;
-    margin: 10px;
-    border-radius: 5px;
-    border: none;
-    cursor: pointer;
-    background-color: #007BFF;
+    background-color: #4CAF50;
     color: white;
-    transition: 0.3s;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 10px;
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: #45a049;
 }
 
-footer {
-    margin-top: 20px;
+select {
     padding: 10px;
-    background-color: #333;
-    color: white;
+    margin: 10px;
 }
 
-.gallery-section img {
+#timer {
+    font-size: 20px;
+    margin-top: 10px;
+}
+
+#gallery {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+#gallery img {
     width: 100px;
-    height: 100px;
-    margin: 5px;
-    border: 2px solid #ddd;
+    margin: 10px;
     border-radius: 5px;
-    object-fit: cover;
 }
 
-.gallery-section {
-    margin-top: 20px;
+.dark-mode {
+    background-color: #121212;
+    color: #fff;
+}
+
+.dark-mode button {
+    background-color: #333;
+}
+
+.dark-mode select {
+    background-color: #333;
+    color: #fff;
+}
+
+/* Frame Styling */
+#frame {
+    border: 5px solid #333;
+    margin: 20px;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+#drawing-mode-canvas {
+    border: 1px solid black;
+    cursor: crosshair;
+}
+
+/* Share Buttons */
+#share-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#share-buttons button {
+    background-color: #007bff;
+    margin: 5px;
 }
