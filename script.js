@@ -6,14 +6,17 @@ const gallery = document.getElementById('gallery');
 const filters = document.getElementById('filters');
 const ctx = canvas.getContext('2d');
 
-// Start the video stream
+// ক্যামেরা অ্যাক্সেস শুরু করা
 navigator.mediaDevices.getUserMedia({ video: true })
     .then(stream => {
         video.srcObject = stream;
+        video.play();
     })
     .catch(err => {
-        console.error("Error accessing camera:", err);
+        console.error('Camera access denied or unavailable:', err);
+        alert('Please allow camera access to use this feature.');
     });
+
 
 // Capture and display image
 captureButton.addEventListener('click', () => {
