@@ -3,50 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auto Play Camera</title>
+    <title>Advanced Camera App</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
     <!-- Navbar -->
     <nav>
         <div class="logo">WebCam</div>
-        <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌙</button>
+        <button onclick="toggleTheme()">🌙 Theme</button>
     </nav>
 
-    <!-- Main Content -->
+    <!-- Main Section -->
     <div class="container">
-        <h1>Welcome to Auto Play Camera</h1>
-        <p>Click "Capture" to take a snapshot using your webcam!</p>
-        
-        <!-- Video and Canvas -->
+        <!-- Video Section -->
         <video id="video" autoplay></video>
         <canvas id="canvas" style="display: none;"></canvas>
-        
+
         <!-- Buttons -->
-        <button id="capture" class="capture-button">Capture</button>
-        <button id="download" class="capture-button">Download Image</button>
-        <button onclick="startTimer(5)">Take Photo in 5s</button>
+        <div class="button-container">
+            <button id="capture" class="capture-button">Capture</button>
+            <button id="download" class="capture-button">Download Image</button>
+        </div>
 
         <!-- Filters -->
-        <label for="filters">Choose a Filter:</label>
-        <select id="filters">
-            <option value="">No Filter</option>
-            <option value="grayscale(100%)">Grayscale</option>
-            <option value="sepia(100%)">Sepia</option>
-            <option value="blur(5px)">Blur</option>
-        </select>
+        <div class="filter-section">
+           <h2>Filters</h2>
+           <select id="filters">
+               <option value="">None</option>
+               <option value="grayscale(100%)">Grayscale</option>
+               <option value="sepia(100%)">Sepia</option>
+               <option value="invert(100%)">Invert</option>
+               <option value="brightness(150%)">Brightness</option>
+               <option value="contrast(200%)">Contrast</option>
+               <option value="blur(5px)">Blur</option>
+               <option value="hue-rotate(90deg)">Hue Rotate</option>
+               <option value="saturate(300%)">Saturate</option>
+               <option value="opacity(50%)">Opacity</option>
+               <option value="drop-shadow(8px 8px 10px gray)">Drop Shadow</option>
+               <option value="brightness(110%) sepia(20%)">Warm Tone</option>
+               <option value="brightness(90%) hue-rotate(200deg)">Cold Tone</option>
+               <option value="sepia(60%) contrast(120%)">Vintage</option>
+               <option value="brightness(50%) contrast(200%)">Night Vision</option>
+               <option value="contrast(200%) grayscale(100%)">Emboss</option>
+               <option value="grayscale(100%) brightness(120%)">Sketch Effect</option>
+               <option value="contrast(50%) saturate(200%)">Pixelate</option>
+               <option value="contrast(150%) brightness(120%)">Comic Effect</option>
+               <option value="brightness(120%) blur(2px)">Glow Effect</option>
+          </select>
+        </div>
+
+        <!-- Timer -->
+        <div class="timer-section">
+            <h2>Set Timer</h2>
+            <button onclick="startTimer(3)">After 3s</button>
+            <button onclick="startTimer(5)">After 5s</button>
+        </div>
+
+        <!-- Frames -->
+        <div class="frame-section">
+            <h2>Choose Frame</h2>
+            <button onclick="applyFrame('circle')">Circle Frame</button>
+            <button onclick="applyFrame('square')">Square Frame</button>
+        </div>
+
+        <!-- Drawing Mode -->
+        <div class="drawing-section">
+            <h2>Drawing Mode</h2>
+            <canvas id="drawingCanvas"></canvas>
+        </div>
 
         <!-- Gallery -->
-        <h2>Image Gallery</h2>
-        <div id="gallery" class="image-gallery"></div>
+        <div class="gallery-section">
+            <h2>Gallery</h2>
+            <button onclick="shareImage()">Share</button>
+        </div>
     </div>
 
     <!-- Footer -->
     <footer>
-        <p>&copy; 2024 WebCam, All Rights Reserved.</p>
+        <p>&copy; 2024 Advanced WebCam App, All Rights Reserved.</p>
     </footer>
 
     <script src="script.js"></script>
 </body>
-</html>
+                </html>
+                
