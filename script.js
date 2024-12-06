@@ -8,13 +8,14 @@ let stopRecordingButton = document.getElementById('stopRecordingButton');
 let permissionRequest = document.getElementById('permissionRequest');
 let cameraContainer = document.querySelector('.camera-container');
 let controls = document.querySelector('.controls');
-let capturedImagesContainer = document.getElementById('capturedImagesContainer');
-let capturedVideosContainer = document.getElementById('capturedVideosContainer');
+let capturedContentContainer = document.getElementById('capturedContentContainer');
+let filterSelect = document.getElementById('filterSelect');
 
 let currentStream;
 let mediaRecorder;
 let recordedChunks = [];
 let isRecording = false;
+let videoStartTime;
 
 // Function to start camera
 async function startCamera() {
@@ -45,10 +46,22 @@ function captureImage() {
     let imgElement = document.createElement('img');
     imgElement.src = imageDataUrl;
 
-    // Append captured image below
-    capturedImagesContainer.appendChild(imgElement);
-    capturedImagesContainer.style.display = 'block'; // Show captured images section
+    // Append captured image to the content container
+    let imageContainer = document.createElement('div');
+    imageContainer.classList.add('captured-item');
+    imageContainer.appendChild(imgElement);
+
+    capturedContentContainer.appendChild(imageContainer);
+    capturedContentContainer.style.display = 'block'; // Show content section
     downloadButton.style.display = 'block'; // Show download button
+
+    // Enable download button for the captured image
+    downloadButton.onclick = function() {
+        let link = document.createElement('a');
+        link.href = imageDataUrl;
+        link.download = 'captured-image.png';
+        link.click();
+    };
 }
 
 // Start recording video
@@ -69,60 +82,49 @@ function startRecording() {
         videoElement.src = videoURL;
         videoElement.controls = true;
 
-        // Display recorded video below
-        capturedVideosContainer.appendChild(videoElement);
-        capturedVideosContainer.style.display = 'block'; // Show captured videos section
+        // Display recorded video in the content container
+        let videoContainer = document.createElement('div');
+        videoContainer.classList.add('captured-item');
+        videoContainer.appendChild(videoElement);
+
+        capturedContentContainer.appendChild(videoContainer);
+        capturedContentContainer.style.display = 'block'; // Show content section
 
         // Create a download link for the recorded video
         let downloadLink = document.createElement('a');
         downloadLink.href = videoURL;
         downloadLink.download = 'recorded-video.webm';
         downloadLink.textContent = 'Download Video';
-        capturedVideosContainer.appendChild(downloadLink);
+        videoContainer.appendChild(downloadLink);
     };
 
     mediaRecorder.start();
     startRecordingButton.style.display = 'none';
-    stopRecordingButton.style.display = 'block';
+    stopRecordingButton.style.display = 'inline-block';
 }
 
 // Stop recording video
 function stopRecording() {
     mediaRecorder.stop();
-    startRecordingButton.style.display = 'block';
+    startRecordingButton.style.display = 'inline-block';
     stopRecordingButton.style.display = 'none';
 }
 
-// PiP Mode (Picture-in-Picture)
-async function enablePiP() {
-    try {
-        if (document.pictureInPictureElement) {
-            await document.exitPictureInPicture();
-        } else {
-            await videoElement.requestPictureInPicture();
-        }
-    } catch (err) {
-        console.error('Error in PiP mode: ', err);
-    }
+// Enable Picture-in-Picture mode
+function enablePiP() {
+    videoElement.requestPictureInPicture();
 }
 
-// Download captured image
-downloadButton.addEventListener('click', function() {
-    let imageDataUrl = canvasElement.toDataURL('image/png');
-    let link = document.createElement('a');
-    link.href = imageDataUrl;
-    link.download = 'captured-image.png';
-    link.click();
-});
+// Apply selected filter to the video
+function applyFilter(filterValue) {
+    videoElement.style.filter = filterValue;
+}
 
-// Event Listeners for buttons
+// Event listeners
+document.getElementById('allowButton').addEventListener('click', startCamera);
 captureButton.addEventListener('click', captureImage);
 startRecordingButton.addEventListener('click', startRecording);
 stopRecordingButton.addEventListener('click', stopRecording);
 pipButton.addEventListener('click', enablePiP);
 
-// Event listener for Allow Button
-document.getElementById('allowButton').addEventListener('click', function() {
-    // Start the camera when "Allow" is clicked
-    startCamera();
-});
+            
