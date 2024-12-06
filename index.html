@@ -11,7 +11,7 @@
     <!-- Main Content -->
     <div class="container">
         <header>
-            <h2>mehadi_X_camera</h2>
+            <h4>mehadi_X_camera</h4>
         </header>
 
         <!-- Permission Request -->
@@ -34,25 +34,48 @@
             <button id="downloadButton" style="display: none;">Download</button>
         </div>
 
-        <!-- Captured Images Section -->
-        <div class="captured-images" style="display: none;">
-            <h3>Captured Images</h3>
-            <div id="capturedImagesContainer"></div>
-        </div>
-
-        <!-- Captured Videos Section -->
-        <div class="captured-videos" style="display: none;">
-            <h3>Captured Videos</h3>
-            <div id="capturedVideosContainer"></div>
+        <!-- Filter Dropdown -->
+        <div class="filter-dropdown" style="display: none;">
+            <select id="filterSelect" onchange="applyFilter(this.value)">
+                <option value="">No Filter</option>
+                <!-- 20 Filters -->
+                <option value="grayscale(100%)">Grayscale</option>
+                <option value="sepia(100%)">Sepia</option>
+                <option value="blur(5px)">Blur</option>
+                <option value="contrast(200%)">Contrast</option>
+                <option value="brightness(150%)">Brightness</option>
+                <option value="invert(100%)">Invert</option>
+                <option value="saturate(200%)">Saturate</option>
+                <option value="hue-rotate(90deg)">Hue Rotate</option>
+                <option value="opacity(50%)">Opacity</option>
+                <option value="drop-shadow(10px 10px 5px rgba(0,0,0,0.5))">Drop Shadow</option>
+                <option value="sepia(50%)">Sepia Light</option>
+                <option value="grayscale(50%)">Grayscale Light</option>
+                <option value="contrast(50%)">Low Contrast</option>
+                <option value="brightness(50%)">Low Brightness</option>
+                <option value="invert(50%)">Invert Light</option>
+                <option value="saturate(100%)">Normal Saturation</option>
+                <option value="hue-rotate(180deg)">Hue Rotate 180</option>
+                <option value="grayscale(100%) blur(3px)">Blur + Grayscale</option>
+                <option value="brightness(200%)">Bright</option>
+                <option value="drop-shadow(5px 5px 15px rgba(0,0,0,0.7))">Shadow Effect</option>
+            </select>
         </div>
 
         <!-- PiP Mode -->
         <div class="pip-container" style="display: none;">
             <button id="pipButton">Picture-in-Picture</button>
         </div>
-   
+
+        <!-- Captured Content Section -->
+        <div class="captured-content" style="display: none;">
+            <h3>Captured Content</h3>
+            <div id="capturedContentContainer"></div>
+        </div>
+
     </div>
 
     <script src="script.js"></script>
 </body>
-</html>
+    </html>
+    
