@@ -9,13 +9,22 @@
 <body>
     <header>
         <h1>Md Mehadi Sarkar</h1>
+        <p>Your webcam capture and video filter tool</p>
     </header>
 
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loader"></div>
+        <p>Loading...</p>
+    </div>
+
+    <!-- Camera Feed -->
     <div class="camera-container">
         <video id="video" autoplay></video>
         <canvas id="canvas" style="display: none;"></canvas>
     </div>
 
+    <!-- Controls -->
     <div class="controls">
         <button id="switchCamera">Switch Camera</button>
         <button id="captureButton">Capture</button>
@@ -24,33 +33,48 @@
         <button id="stopRecordingButton" style="display:none;">Stop Recording</button>
     </div>
 
-    <div class="filters">
-        <label for="filterSelect">Choose a filter:</label>
-        <select id="filterSelect">
-            <option value="none">None</option>
-            <option value="grayscale">Grayscale</option>
-            <option value="sepia">Sepia</option>
-            <option value="invert">Invert</option>
-            <option value="blur">Blur</option>
-            <option value="brightness">Brightness</option>
-            <option value="contrast">Contrast</option>
-            <option value="saturate">Saturate</option>
-            <option value="hue-rotate">Hue Rotate</option>
-            <option value="sepia2">Sepia 2</option>
-            <option value="invert2">Invert 2</option>
-            <option value="blur2">Blur 2</option>
-            <option value="brightness2">Brightness 2</option>
-            <option value="contrast2">Contrast 2</option>
-            <option value="saturate2">Saturate 2</option>
-            <option value="grayscale2">Grayscale 2</option>
-            <option value="zoom-in">Zoom In</option>
-            <option value="zoom-out">Zoom Out</option>
-            <option value="edge">Edge</option>
-            <option value="pixelate">Pixelate</option>
-            <option value="emboss">Emboss</option>
+    <!-- Filter Dropdown -->
+    <div class="filter-dropdown">
+        <label for="filterSelect">Choose a Filter:</label>
+        <select id="filterSelect" onchange="applyFilter(this.value)">
+            <option value="">No Filter</option>
+            <option value="grayscale(100%)">Grayscale</option>
+            <option value="sepia(100%)">Sepia</option>
+            <option value="blur(5px)">Blur</option>
+            <option value="contrast(200%)">Contrast</option>
+            <option value="brightness(150%)">Brightness</option>
+            <option value="invert(100%)">Invert</option>
+            <option value="saturate(200%)">Saturate</option>
+            <option value="hue-rotate(90deg)">Hue Rotate</option>
+            <option value="opacity(50%)">Opacity</option>
+            <option value="drop-shadow(10px 10px 5px rgba(0,0,0,0.5))">Drop Shadow</option>
+            <option value="blur(10px)">Blur (Heavy)</option>
         </select>
     </div>
 
+    <!-- Share Buttons -->
+    <div class="share-buttons">
+        <a href="https://www.facebook.com/sharer/sharer.php?u=YOUR_URL" target="_blank">
+            <button>Share on Facebook</button>
+        </a>
+        <a href="https://twitter.com/intent/tweet?url=YOUR_URL" target="_blank">
+            <button>Share on Twitter</button>
+        </a>
+        <a href="https://wa.me/?text=YOUR_URL" target="_blank">
+            <button>Share on WhatsApp</button>
+        </a>
+    </div>
+
+    <!-- Speed Control -->
+    <div class="speed-control">
+        <label for="speedControl">Adjust Video Speed:</label>
+        <input type="range" id="speedControl" min="0.5" max="2" step="0.1" value="1" onchange="changeSpeed()">
+    </div>
+
+    <!-- PiP Button -->
+    <button id="pipButton">Enter Picture-in-Picture</button>
+
     <script src="script.js"></script>
 </body>
-</html>
+    </html>
+    
