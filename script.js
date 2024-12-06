@@ -4,7 +4,7 @@ const captureButton = document.getElementById('captureButton');
 const downloadButton = document.getElementById('downloadButton');
 const startRecordingButton = document.getElementById('startRecordingButton');
 const stopRecordingButton = document.getElementById('stopRecordingButton');
-const filters = document.querySelectorAll('.filter');
+const filterSelect = document.getElementById('filterSelect');
 const ctx = canvas.getContext('2d');
 let currentFilter = 'none';
 let currentStream;
@@ -44,12 +44,10 @@ downloadButton.addEventListener('click', () => {
     a.click();
 });
 
-// Apply Filters
-filters.forEach(button => {
-    button.addEventListener('click', () => {
-        currentFilter = button.id.replace('filter-', '').toLowerCase();
-        console.log("Selected Filter:", currentFilter);
-    });
+// Change Filter when selected from dropdown
+filterSelect.addEventListener('change', (event) => {
+    currentFilter = event.target.value;
+    console.log("Selected Filter:", currentFilter);
 });
 
 // Start Recording
