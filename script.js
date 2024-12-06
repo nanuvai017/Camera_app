@@ -18,7 +18,12 @@ async function startCamera() {
     try {
         currentStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
         videoElement.srcObject = currentStream;
-        document.getElementById('loadingScreen').style.display = 'none'; // Hide loading screen
+
+        // Wait for the video to load its metadata and then hide loading screen
+        videoElement.onloadeddata = function() {
+            document.getElementById('loadingScreen').style.display = 'none'; // Hide loading screen after video is ready
+        };
+
     } catch (err) {
         console.error('Error accessing webcam: ', err);
         alert('Could not access webcam');
@@ -137,4 +142,4 @@ switchCameraButton.addEventListener('click', switchCamera);
 
 // Start camera when page loads
 startCamera();
-                                                                        
+            
