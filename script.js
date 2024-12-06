@@ -2,15 +2,14 @@ let videoElement = document.getElementById('video');
 let canvasElement = document.getElementById('canvas');
 let captureButton = document.getElementById('captureButton');
 let downloadButton = document.getElementById('downloadButton');
-let filterSelect = document.getElementById('filterSelect');
 let pipButton = document.getElementById('pipButton');
 let startRecordingButton = document.getElementById('startRecordingButton');
 let stopRecordingButton = document.getElementById('stopRecordingButton');
 let permissionRequest = document.getElementById('permissionRequest');
 let cameraContainer = document.querySelector('.camera-container');
 let controls = document.querySelector('.controls');
-let filterDropdown = document.querySelector('.filter-dropdown');
-let pipContainer = document.querySelector('.pip-container');
+let capturedImagesContainer = document.getElementById('capturedImagesContainer');
+let capturedVideosContainer = document.getElementById('capturedVideosContainer');
 
 let currentStream;
 let mediaRecorder;
@@ -28,17 +27,11 @@ async function startCamera() {
         permissionRequest.style.display = 'none';
         cameraContainer.style.display = 'block';
         controls.style.display = 'block';
-        filterDropdown.style.display = 'block';
-        pipContainer.style.display = 'block';
+        pipButton.style.display = 'block';
     } catch (err) {
         console.error('Error accessing webcam: ', err);
         alert('Could not access webcam. Please grant permission to access your camera.');
     }
-}
-
-// Apply filter to video
-function applyFilter(filterValue) {
-    videoElement.style.filter = filterValue;
 }
 
 // Capture image from video
@@ -53,7 +46,8 @@ function captureImage() {
     imgElement.src = imageDataUrl;
 
     // Append captured image below
-    document.getElementById('capturedImagesContainer').appendChild(imgElement);
+    capturedImagesContainer.appendChild(imgElement);
+    capturedImagesContainer.style.display = 'block'; // Show captured images section
     downloadButton.style.display = 'block'; // Show download button
 }
 
@@ -76,14 +70,15 @@ function startRecording() {
         videoElement.controls = true;
 
         // Display recorded video below
-        document.getElementById('capturedVideosContainer').appendChild(videoElement);
+        capturedVideosContainer.appendChild(videoElement);
+        capturedVideosContainer.style.display = 'block'; // Show captured videos section
 
         // Create a download link for the recorded video
         let downloadLink = document.createElement('a');
         downloadLink.href = videoURL;
         downloadLink.download = 'recorded-video.webm';
         downloadLink.textContent = 'Download Video';
-        document.getElementById('capturedVideosContainer').appendChild(downloadLink);
+        capturedVideosContainer.appendChild(downloadLink);
     };
 
     mediaRecorder.start();
@@ -129,5 +124,5 @@ pipButton.addEventListener('click', enablePiP);
 // Event listener for Allow Button
 document.getElementById('allowButton').addEventListener('click', function() {
     // Start the camera when "Allow" is clicked
-    startCamera
-    
+    startCamera();
+});
