@@ -6,24 +6,30 @@ let filterSelect = document.getElementById('filterSelect');
 let pipButton = document.getElementById('pipButton');
 let startRecordingButton = document.getElementById('startRecordingButton');
 let stopRecordingButton = document.getElementById('stopRecordingButton');
-let capturedVideosContainer = document.getElementById('capturedVideosContainer');
+let permissionRequest = document.getElementById('permissionRequest');
+let cameraContainer = document.querySelector('.camera-container');
+let controls = document.querySelector('.controls');
+let filterDropdown = document.querySelector('.filter-dropdown');
+let pipContainer = document.querySelector('.pip-container');
 
 let currentStream;
 let mediaRecorder;
 let recordedChunks = [];
 let isRecording = false;
 
-// Start camera function
+// Function to start camera
 async function startCamera() {
     try {
+        // Ask for camera permissions
         currentStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
         videoElement.srcObject = currentStream;
 
-        // Wait for the video to load its metadata and then hide loading screen
-        videoElement.onloadeddata = function() {
-            document.getElementById('loadingScreen').style.display = 'none'; // Hide loading screen after video is ready
-        };
-
+        // Hide the permission request and show the camera UI
+        permissionRequest.style.display = 'none';
+        cameraContainer.style.display = 'block';
+        controls.style.display = 'block';
+        filterDropdown.style.display = 'block';
+        pipContainer.style.display = 'block';
     } catch (err) {
         console.error('Error accessing webcam: ', err);
         alert('Could not access webcam');
@@ -47,7 +53,7 @@ function captureImage() {
     imgElement.src = imageDataUrl;
 
     // Append captured image below
-    capturedVideosContainer.appendChild(imgElement);
+    document.getElementById('capturedImagesContainer').appendChild(imgElement);
     downloadButton.style.display = 'block'; // Show download button
 }
 
@@ -70,14 +76,14 @@ function startRecording() {
         videoElement.controls = true;
 
         // Display recorded video below
-        capturedVideosContainer.appendChild(videoElement);
+        document.getElementById('capturedVideosContainer').appendChild(videoElement);
 
         // Create a download link for the recorded video
         let downloadLink = document.createElement('a');
         downloadLink.href = videoURL;
         downloadLink.download = 'recorded-video.webm';
         downloadLink.textContent = 'Download Video';
-        capturedVideosContainer.appendChild(downloadLink);
+        document.getElementById('capturedVideosContainer').appendChild(downloadLink);
     };
 
     mediaRecorder.start();
@@ -90,25 +96,6 @@ function stopRecording() {
     mediaRecorder.stop();
     startRecordingButton.style.display = 'block';
     stopRecordingButton.style.display = 'none';
-}
-
-// Switch camera (front/back)
-async function switchCamera() {
-    let videoTracks = currentStream.getVideoTracks();
-    let newStream;
-
-    if (videoTracks[0].label.includes('front')) {
-        newStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: true });
-    } else {
-        newStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: true });
-    }
-
-    // Stop the previous video track
-    videoTracks[0].stop();
-
-    // Set the new video stream
-    videoElement.srcObject = newStream;
-    currentStream = newStream;
 }
 
 // PiP Mode (Picture-in-Picture)
@@ -138,8 +125,6 @@ captureButton.addEventListener('click', captureImage);
 startRecordingButton.addEventListener('click', startRecording);
 stopRecordingButton.addEventListener('click', stopRecording);
 pipButton.addEventListener('click', enablePiP);
-switchCameraButton.addEventListener('click', switchCamera);
 
-// Start camera when page loads
-startCamera();
-            
+// Event listener for Allow Button
+document.getElementById('allowButton').addEventListener('click', startCamera);
