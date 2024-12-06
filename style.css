@@ -71,12 +71,18 @@ video {
     margin-top: 20px;
 }
 
-/* Captured Images Section */
-.captured-images {
+/* Captured Content Section */
+.captured-content {
     margin-top: 20px;
 }
 
 /* Captured Videos Section */
-.captured-videos {
-    margin-top: 20px;
+#capturedContentContainer video {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+#capturedContentContainer img {
+    width: 100%;
+    margin-bottom: 10px;
 }
