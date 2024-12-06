@@ -32,7 +32,7 @@ async function startCamera() {
         pipContainer.style.display = 'block';
     } catch (err) {
         console.error('Error accessing webcam: ', err);
-        alert('Could not access webcam');
+        alert('Could not access webcam. Please grant permission to access your camera.');
     }
 }
 
@@ -127,4 +127,7 @@ stopRecordingButton.addEventListener('click', stopRecording);
 pipButton.addEventListener('click', enablePiP);
 
 // Event listener for Allow Button
-document.getElementById('allowButton').addEventListener('click', startCamera);
+document.getElementById('allowButton').addEventListener('click', function() {
+    // Start the camera when "Allow" is clicked
+    startCamera();
+});
