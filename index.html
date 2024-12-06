@@ -8,40 +8,34 @@
 </head>
 <body>
 
-    <!-- Loading Screen -->
-    <div id="loadingScreen">
-        <div class="loading-text">Loading...</div>
-    </div>
-
     <!-- Main Content -->
     <div class="container">
         <header>
-            <h4>mehadi_X_camera</h4>
+            <h2>mehadi_X_camera</h2>
         </header>
 
+        <!-- Permission Request -->
+        <div id="permissionRequest">
+            <h3>Allow Camera Access</h3>
+            <button id="allowButton">Allow</button>
+        </div>
+
         <!-- Webcam Section -->
-        <div class="camera-container">
+        <div class="camera-container" style="display: none;">
             <video id="video" autoplay></video>
             <canvas id="canvas" style="display: none;"></canvas>
         </div>
 
         <!-- Control Buttons -->
-        <div class="controls">
-            <!-- Capture Button -->
+        <div class="controls" style="display: none;">
             <button id="captureButton">Capture</button>
-
-            <!-- Start and Stop Recording Buttons (on the same row) -->
-            <div class="top-row">
-                <button id="startRecordingButton">Start Recording</button>
-                <button id="stopRecordingButton" style="display:none;">Stop Recording</button>
-            </div>
-
-            <!-- Download Button -->
-            <button id="downloadButton" style="display:none;">Download</button>
+            <button id="startRecordingButton">Start Recording</button>
+            <button id="stopRecordingButton" style="display: none;">Stop Recording</button>
+            <button id="downloadButton" style="display: none;">Download</button>
         </div>
 
         <!-- Filter Dropdown -->
-        <div class="filter-dropdown">
+        <div class="filter-dropdown" style="display: none;">
             <select id="filterSelect" onchange="applyFilter(this.value)">
                 <option value="">No Filter</option>
                 <option value="grayscale(100%)">Grayscale</option>
@@ -57,19 +51,13 @@
             </select>
         </div>
 
-        <!-- Captured Videos Section -->
-        <div class="captured-videos">
-            <h3>Captured Videos</h3>
-            <div id="capturedVideosContainer"></div>
-        </div>
-
         <!-- PiP Mode -->
-        <div class="pip-container">
+        <div class="pip-container" style="display: none;">
             <button id="pipButton">Picture-in-Picture</button>
         </div>
+   
     </div>
 
     <script src="script.js"></script>
 </body>
-                </html>
-                
+</html>
