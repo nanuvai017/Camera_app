@@ -29,6 +29,7 @@ async function startCamera() {
         cameraContainer.style.display = 'block';
         controls.style.display = 'block';
         pipButton.style.display = 'block';
+        filterSelect.style.display = 'block';
     } catch (err) {
         console.error('Error accessing webcam: ', err);
         alert('Could not access webcam. Please grant permission to access your camera.');
@@ -127,4 +128,4 @@ startRecordingButton.addEventListener('click', startRecording);
 stopRecordingButton.addEventListener('click', stopRecording);
 pipButton.addEventListener('click', enablePiP);
 
-            
+        
