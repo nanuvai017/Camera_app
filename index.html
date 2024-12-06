@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Webcam Capture with Filters</title>
+    <title>Webcam Capture with Mehadi</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="header">
-        <h1>Capture Your Image with Filters</h1>
-        <button id="switchCamera">Switch Camera</button>
-    </div>
+    <header>
+        <h1>Webcam Capture App</h1>
+    </header>
 
     <div class="camera-container">
-        <video id="video" autoplay></video> <!-- Video Stream -->
-        <canvas id="canvas" style="display: none;"></canvas> <!-- Canvas to capture the image -->
+        <video id="video" autoplay></video>
+        <canvas id="canvas" style="display: none;"></canvas>
     </div>
 
     <div class="controls">
+        <button id="switchCamera">Switch Camera</button>
         <button id="captureButton">Capture</button>
         <button id="downloadButton">Download</button>
         <button id="startRecordingButton">Start Recording</button>
@@ -25,26 +25,29 @@
     </div>
 
     <div class="filters">
-        <button class="filter" id="filter-1">Grayscale</button>
-        <button class="filter" id="filter-2">Sepia</button>
-        <button class="filter" id="filter-3">Invert</button>
-        <button class="filter" id="filter-4">Blur</button>
-        <button class="filter" id="filter-5">Brightness</button>
-        <button class="filter" id="filter-6">Contrast</button>
-        <button class="filter" id="filter-7">Saturate</button>
-        <button class="filter" id="filter-8">Hue Rotate</button>
-        <button class="filter" id="filter-9">Sepia 2</button>
-        <button class="filter" id="filter-10">Invert 2</button>
-        <button class="filter" id="filter-11">Blur 2</button>
-        <button class="filter" id="filter-12">Brightness 2</button>
-        <button class="filter" id="filter-13">Contrast 2</button>
-        <button class="filter" id="filter-14">Saturate 2</button>
-        <button class="filter" id="filter-15">Grayscale 2</button>
-        <button class="filter" id="filter-16">None</button>
-        <button class="filter" id="filter-17">Normal</button>
-        <button class="filter" id="filter-18">Zoom In</button>
-        <button class="filter" id="filter-19">Zoom Out</button>
-        <button class="filter" id="filter-20">Edge</button>
+        <label for="filterSelect">Choose a filter:</label>
+        <select id="filterSelect">
+            <option value="none">None</option>
+            <option value="grayscale">Grayscale</option>
+            <option value="sepia">Sepia</option>
+            <option value="invert">Invert</option>
+            <option value="blur">Blur</option>
+            <option value="brightness">Brightness</option>
+            <option value="contrast">Contrast</option>
+            <option value="saturate">Saturate</option>
+            <option value="hue-rotate">Hue Rotate</option>
+            <option value="sepia2">Sepia 2</option>
+            <option value="invert2">Invert 2</option>
+            <option value="blur2">Blur 2</option>
+            <option value="brightness2">Brightness 2</option>
+            <option value="contrast2">Contrast 2</option>
+            <option value="saturate2">Saturate 2</option>
+            <option value="grayscale2">Grayscale 2</option>
+            <option value="normal">Normal</option>
+            <option value="zoom-in">Zoom In</option>
+            <option value="zoom-out">Zoom Out</option>
+            <option value="edge">Edge</option>
+        </select>
     </div>
 
     <footer>
@@ -53,5 +56,4 @@
 
     <script src="script.js"></script>
 </body>
-    </html>
-        
+</html>
