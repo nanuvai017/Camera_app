@@ -3,88 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Camera App</title>
+    <title>Advanced WebCam</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <!-- Navbar -->
     <nav>
-        <div class="logo">WebCam</div>
-        <button onclick="toggleTheme()">🌙 Theme</button>
+        <div class="logo">Advanced WebCam</div>
     </nav>
 
-    <!-- Main Section -->
+    <!-- Main Content -->
     <div class="container">
-        <!-- Video Section -->
+        <h1>WebCam Photo Studio</h1>
+        <p>Stand in front of the camera, customize settings, and capture your perfect photo!</p>
+        
+        <!-- Video Stream -->
         <video id="video" autoplay></video>
+        
+        <!-- Canvas -->
         <canvas id="canvas" style="display: none;"></canvas>
-
-        <!-- Buttons -->
-        <div class="button-container">
-            <button id="capture" class="capture-button">Capture</button>
-            <button id="download" class="capture-button">Download Image</button>
-        </div>
-
+        
         <!-- Filters -->
         <div class="filter-section">
-           <h2>Filters</h2>
-           <select id="filters">
-               <option value="">None</option>
-               <option value="grayscale(100%)">Grayscale</option>
-               <option value="sepia(100%)">Sepia</option>
-               <option value="invert(100%)">Invert</option>
-               <option value="brightness(150%)">Brightness</option>
-               <option value="contrast(200%)">Contrast</option>
-               <option value="blur(5px)">Blur</option>
-               <option value="hue-rotate(90deg)">Hue Rotate</option>
-               <option value="saturate(300%)">Saturate</option>
-               <option value="opacity(50%)">Opacity</option>
-               <option value="drop-shadow(8px 8px 10px gray)">Drop Shadow</option>
-               <option value="brightness(110%) sepia(20%)">Warm Tone</option>
-               <option value="brightness(90%) hue-rotate(200deg)">Cold Tone</option>
-               <option value="sepia(60%) contrast(120%)">Vintage</option>
-               <option value="brightness(50%) contrast(200%)">Night Vision</option>
-               <option value="contrast(200%) grayscale(100%)">Emboss</option>
-               <option value="grayscale(100%) brightness(120%)">Sketch Effect</option>
-               <option value="contrast(50%) saturate(200%)">Pixelate</option>
-               <option value="contrast(150%) brightness(120%)">Comic Effect</option>
-               <option value="brightness(120%) blur(2px)">Glow Effect</option>
-          </select>
+            <h2>Filters</h2>
+            <select id="filter">
+                <option value="none">None</option>
+                <option value="grayscale">Grayscale</option>
+                <option value="sepia">Sepia</option>
+                <option value="invert">Invert</option>
+                <option value="contrast">High Contrast</option>
+                <option value="brightness">Brightness</option>
+                <option value="blur">Blur</option>
+                <option value="saturate">Saturate</option>
+                <option value="hue-rotate">Hue Rotate</option>
+                <option value="opacity">Opacity</option>
+                <option value="shadow">Shadow</option>
+                <option value="vintage">Vintage</option>
+                <option value="cool">Cool</option>
+                <option value="warm">Warm</option>
+                <option value="cartoon">Cartoon</option>
+                <option value="sketch">Sketch</option>
+                <option value="edge">Edge Detection</option>
+                <option value="rainbow">Rainbow</option>
+                <option value="glow">Glow</option>
+                <option value="comic">Comic</option>
+            </select>
         </div>
-
+        
         <!-- Timer -->
         <div class="timer-section">
             <h2>Set Timer</h2>
-            <button onclick="startTimer(3)">After 3s</button>
-            <button onclick="startTimer(5)">After 5s</button>
+            <input type="number" id="timer" placeholder="Seconds" min="1" max="10">
+            <button id="setTimer">Start Timer</button>
         </div>
 
         <!-- Frames -->
         <div class="frame-section">
             <h2>Choose Frame</h2>
-            <button onclick="applyFrame('circle')">Circle Frame</button>
-            <button onclick="applyFrame('square')">Square Frame</button>
+            <select id="frame">
+                <option value="none">None</option>
+                <option value="circle">Circle</option>
+                <option value="border">Border</option>
+                <option value="shadow-border">Shadow Border</option>
+            </select>
         </div>
 
         <!-- Drawing Mode -->
         <div class="drawing-section">
             <h2>Drawing Mode</h2>
-            <canvas id="drawingCanvas"></canvas>
+            <button id="enableDrawing">Enable Drawing</button>
+            <button id="clearDrawing" style="display: none;">Clear Drawing</button>
         </div>
 
+        <!-- Buttons -->
+        <div class="button-group">
+            <button id="capture">Capture</button>
+            <button id="download" style="display: none;">Download Image</button>
+        </div>
+        
         <!-- Gallery -->
         <div class="gallery-section">
             <h2>Gallery</h2>
-            <button onclick="shareImage()">Share</button>
+            <div id="gallery"></div>
         </div>
     </div>
 
     <!-- Footer -->
     <footer>
-        <p>&copy; 2024 Advanced WebCam App, All Rights Reserved.</p>
+        <p>&copy; 2024 Advanced WebCam, All Rights Reserved.</p>
     </footer>
 
     <script src="script.js"></script>
 </body>
-                </html>
-                
+                                                 </html>
+                                                 
