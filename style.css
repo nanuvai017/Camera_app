@@ -1,124 +1,114 @@
 /* Basic Styles */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
     margin: 0;
     padding: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    overflow: hidden;
+    background-color: #f0f0f0;
 }
 
 .container {
     text-align: center;
-    width: 100%;
     max-width: 800px;
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    width: 100%;
 }
 
 header h4 {
-    margin-bottom: 10px;
-    font-size: 1.5em;
     color: #333;
+    font-size: 24px;
+    margin-bottom: 20px;
 }
 
 .camera-container {
-    margin-bottom: 20px;
+    position: relative;
 }
 
 video {
     width: 100%;
-    height: auto;
-    border: 2px solid #ccc;
-}
-
-.controls {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 20px;
+    border: 2px solid #333;
+    background-color: #000;
 }
 
 .controls button {
     margin: 10px;
-    padding: 12px 30px;
-    background-color: #3498db;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+    padding: 10px 20px;
     font-size: 16px;
-    transition: transform 0.3s ease, background-color 0.3s ease;
-    min-width: 120px;
+    cursor: pointer;
+    border: none;
+    background-color: #28a745;
+    color: #fff;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
 }
 
 .controls button:hover {
-    background-color: #2980b9;
-    transform: scale(1.1);  /* Animation for hover */
+    background-color: #218838;
 }
 
-.controls .hidden {
-    display: none;
+.filter-dropdown select {
+    margin-top: 10px;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    width: 100%;
+    max-width: 250px;
+    background-color: #fff;
+    border: 1px solid #ddd;
 }
 
-.filter-dropdown {
-    margin: 20px 0;
-}
-
-#capturedImagesContainer {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
+.captured-images {
+    margin-top: 20px;
 }
 
 .captured-images img {
     width: 100px;
-    height: 100px;
     margin: 10px;
     border-radius: 5px;
+    border: 1px solid #ddd;
 }
 
 .pip-container {
     margin-top: 20px;
 }
 
-/* Loading Screen */
+button#pipButton {
+    background-color: #007bff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button#pipButton:hover {
+    background-color: #0056b3;
+}
+
 #loadingScreen {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(255, 255, 255, 0.8);
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
-}
-
-.loading-animation {
     font-size: 24px;
-    color: #333;
+    font-weight: bold;
+    z-index: 9999;
 }
 
-/* Make the layout responsive */
-@media screen and (max-width: 600px) {
-    .container {
-        padding: 10px;
-    }
-
-    .controls button {
-        padding: 8px 20px;
-        font-size: 14px;
-        min-width: 100px;
-    }
-
-    video {
-        width: 100%;
-    }
+#loadingScreen .loading-text {
+    animation: fadeIn 2s ease-in-out infinite;
 }
+
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    50% { opacity: 1; }
+    100% { opacity: 0; }
+    }
