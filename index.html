@@ -1,99 +1,64 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced WebCam</title>
+    <title>ক্যামেরা ছবি তোলা</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Navbar -->
+
+    <!-- Navbar for Dark Mode Toggle -->
     <nav>
-        <div class="logo">Advanced WebCam</div>
+        <button id="dark-mode-toggle">🌙</button>
     </nav>
 
-    <!-- Main Content -->
-    <div class="container">
-        <h1>WebCam Photo Studio</h1>
-        <p>Stand in front of the camera, customize settings, and capture your perfect photo!</p>
-        
-        <!-- Video Stream -->
-        <video id="video" autoplay></video>
-        
-        <!-- Canvas -->
-        <canvas id="canvas" style="display: none;"></canvas>
-        
-        <!-- Filters -->
-        <div class="filter-section">
-            <h2>Filters</h2>
-            <select id="filter">
-                <option value="none">None</option>
-                <option value="grayscale">Grayscale</option>
-                <option value="sepia">Sepia</option>
-                <option value="invert">Invert</option>
-                <option value="contrast">High Contrast</option>
-                <option value="brightness">Brightness</option>
-                <option value="blur">Blur</option>
-                <option value="saturate">Saturate</option>
-                <option value="hue-rotate">Hue Rotate</option>
-                <option value="opacity">Opacity</option>
-                <option value="shadow">Shadow</option>
-                <option value="vintage">Vintage</option>
-                <option value="cool">Cool</option>
-                <option value="warm">Warm</option>
-                <option value="cartoon">Cartoon</option>
-                <option value="sketch">Sketch</option>
-                <option value="edge">Edge Detection</option>
-                <option value="rainbow">Rainbow</option>
-                <option value="glow">Glow</option>
-                <option value="comic">Comic</option>
-            </select>
-        </div>
-        
-        <!-- Timer -->
-        <div class="timer-section">
-            <h2>Set Timer</h2>
-            <input type="number" id="timer" placeholder="Seconds" min="1" max="10">
-            <button id="setTimer">Start Timer</button>
-        </div>
+    <h1>আপনার ক্যামেরা দিয়ে ছবি তুলুন</h1>
 
-        <!-- Frames -->
-        <div class="frame-section">
-            <h2>Choose Frame</h2>
-            <select id="frame">
-                <option value="none">None</option>
-                <option value="circle">Circle</option>
-                <option value="border">Border</option>
-                <option value="shadow-border">Shadow Border</option>
-            </select>
-        </div>
+    <!-- Timer Display -->
+    <div id="timer">00:00</div>
 
-        <!-- Drawing Mode -->
-        <div class="drawing-section">
-            <h2>Drawing Mode</h2>
-            <button id="enableDrawing">Enable Drawing</button>
-            <button id="clearDrawing" style="display: none;">Clear Drawing</button>
-        </div>
+    <!-- Video Feed -->
+    <video id="video" autoplay></video>
+    <br>
 
-        <!-- Buttons -->
-        <div class="button-group">
-            <button id="capture">Capture</button>
-            <button id="download" style="display: none;">Download Image</button>
-        </div>
-        
-        <!-- Gallery -->
-        <div class="gallery-section">
-            <h2>Gallery</h2>
-            <div id="gallery"></div>
-        </div>
+    <!-- Drawing Mode Toggle -->
+    <button id="drawing-mode-toggle">ড্রইং মোড চালু করুন</button>
+
+    <!-- Capture Button -->
+    <button id="capture">ছবি তুলুন</button>
+
+    <!-- Filters -->
+    <select id="filter">
+        <option value="">ফিল্টার সিলেক্ট করুন</option>
+        <!-- Filters List -->
+        <option value="grayscale(100%)">গ্রে স্কেল</option>
+        <option value="sepia(100%)">সেপিয়া</option>
+        <option value="invert(100%)">ইনভার্ট</option>
+        <option value="contrast(200%)">কনট্রাস্ট</option>
+        <option value="brightness(150%)">ব্রাইটনেস</option>
+        <option value="blur(5px)">ব্লার</option>
+        <option value="saturate(200%)">স্যাচুরেট</option>
+        <option value="hue-rotate(90deg)">হু রোটেট</option>
+        <option value="opacity(50%)">অপাসিটি</option>
+    </select>
+
+    <!-- Canvas for capturing Image -->
+    <canvas id="canvas" style="display: none;"></canvas>
+
+    <!-- Download Button -->
+    <button id="download" style="display: none;">ডাউনলোড করুন</button>
+
+    <!-- Gallery Section -->
+    <h2>গ্যালারি</h2>
+    <div id="gallery"></div>
+
+    <!-- Share Buttons -->
+    <div id="share-buttons" style="display: none;">
+        <button id="share-facebook">ফেসবুকে শেয়ার করুন</button>
+        <button id="share-whatsapp">WhatsApp-এ শেয়ার করুন</button>
     </div>
-
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2024 Advanced WebCam, All Rights Reserved.</p>
-    </footer>
 
     <script src="script.js"></script>
 </body>
-                    </html>
-                    
+</html>
