@@ -129,5 +129,5 @@ pipButton.addEventListener('click', enablePiP);
 // Event listener for Allow Button
 document.getElementById('allowButton').addEventListener('click', function() {
     // Start the camera when "Allow" is clicked
-    startCamera();
-});
+    startCamera
+    
