@@ -1,7 +1,7 @@
 /* Global Styles */
 body {
     font-family: Arial, sans-serif;
-    background: #f4f4f4;
+    background: #f0f0f5;
     margin: 0;
     padding: 0;
     display: flex;
@@ -9,39 +9,57 @@ body {
     align-items: center;
 }
 
+/* Header */
 header {
-    background: #3498db;
+    background: #2c3e50;
     color: white;
     padding: 10px;
     width: 100%;
     text-align: center;
+    font-size: 1.5rem;
 }
 
+/* Camera Section */
 .camera-container video {
-    width: 100%;
+    width: 90%;
     max-width: 500px;
-    border: 2px solid #3498db;
+    border: 3px solid #3498db;
     border-radius: 10px;
-    margin: 10px 0;
+    margin: 15px 0;
 }
 
-.controls button {
+/* Buttons */
+.controls .btn {
     background: #3498db;
     color: white;
     border: none;
-    padding: 10px;
+    padding: 10px 15px;
     margin: 5px;
     border-radius: 5px;
     cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.3s;
 }
 
-.controls button:hover {
+.controls .btn:hover {
     background: #2980b9;
 }
 
+.hidden {
+    display: none;
+}
+
+/* Filter Dropdown */
 .filter-dropdown select {
-    margin: 10px 0;
-    padding: 5px;
+    padding: 10px;
+    margin: 10px;
+    border: 1px solid #3498db;
+    border-radius: 5px;
+}
+
+/* Captured Images Section */
+.captured-images {
+    text-align: center;
 }
 
 .captured-images img {
@@ -50,3 +68,32 @@ header {
     border: 2px solid #ddd;
     border-radius: 5px;
 }
+
+/* Loading Screen */
+#loadingScreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.loading-animation {
+    font-size: 1.5rem;
+    color: #3498db;
+    animation: fadeInOut 1s infinite;
+}
+
+@keyframes fadeInOut {
+    0%, 100% {
+        opacity: 0.1;
+    }
+    50% {
+        opacity: 1;
+    }
+    }
