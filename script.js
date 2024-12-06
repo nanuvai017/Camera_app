@@ -1,91 +1,147 @@
 const video = document.getElementById('video');
 const canvas = document.getElementById('canvas');
-const filterSelect = document.getElementById('filter');
-const frameSelect = document.getElementById('frame');
-const timerInput = document.getElementById('timer');
-const setTimerButton = document.getElementById('setTimer');
-const enableDrawingButton = document.getElementById('enableDrawing');
-const clearDrawingButton = document.getElementById('clearDrawing');
 const captureButton = document.getElementById('capture');
 const downloadButton = document.getElementById('download');
-const result = document.getElementById('result');
+const filterSelect = document.getElementById('filter');
 const gallery = document.getElementById('gallery');
+const timerDisplay = document.getElementById('timer');
+const drawingModeButton = document.getElementById('drawing-mode-toggle');
+const darkModeButton = document.getElementById('dark-mode-toggle');
+const shareButtons = document.getElementById('share-buttons');
+const shareFacebookButton = document.getElementById('share-facebook');
+const shareWhatsappButton = document.getElementById('share-whatsapp');
+
+const ctx = canvas.getContext('2d');
+let seconds = 0;
+let minutes = 0;
+let timerInterval;
 let drawingMode = false;
+let drawCtx;
 
-// Start camera feed
+// Start camera stream
 navigator.mediaDevices.getUserMedia({ video: true })
-    .then((stream) => {
-        // Attach the stream to the video element
+    .then(stream => {
         video.srcObject = stream;
-
-        // This ensures that the video is playing as soon as the stream is available
-        video.onloadedmetadata = () => {
-            video.play();
-        };
     })
-    .catch((err) => {
-        console.error('Camera access denied or unavailable:', err);
-        alert('Please allow camera access to use this feature.');
+    .catch(err => {
+        console.error("ক্যামেরা অ্যাক্সেস করতে সমস্যা:", err);
     });
 
-// Apply filters
-filterSelect.addEventListener('change', () => {
-    video.style.filter = filterSelect.value;
-});
+// Start Timer
+function startTimer() {
+    timerInterval = setInterval(() => {
+        seconds++;
+        if (seconds === 60) {
+            seconds = 0;
+            minutes++;
+        }
+        timerDisplay.textContent = `${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+    }, 1000);
+}
 
-// Apply frames
-frameSelect.addEventListener('change', () => {
-    video.style.border = frameSelect.value === 'none' ? 'none' : '10px solid black';
-    if (frameSelect.value === 'circle') {
-        video.style.borderRadius = '50%';
-    } else {
-        video.style.borderRadius = '0';
-    }
-});
+startTimer();
 
-// Drawing mode
-enableDrawingButton.addEventListener('click', () => {
-    drawingMode = true;
-    clearDrawingButton.style.display = 'block';
-});
-
-clearDrawingButton.addEventListener('click', () => {
-    drawingMode = false;
-    clearDrawingButton.style.display = 'none';
-});
-
-// Capture image
+// Capture Image
 captureButton.addEventListener('click', () => {
-    const context = canvas.getContext('2d');
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
-    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    ctx.filter = filterSelect.value;
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-    const imageDataURL = canvas.toDataURL('image/png');
-    result.innerHTML = `<img src="${imageDataURL}" alt="Captured Image"/>`;
-
-    // Add to gallery
-    const img = document.createElement('img');
-    img.src = imageDataURL;
-    gallery.appendChild(img);
-
-    // Enable download button
-    downloadButton.style.display = 'block';
-    downloadButton.onclick = () => {
-        const a = document.createElement('a');
-        a.href = imageDataURL;
-        a.download = 'captured-image.png';
-        a.click();
-    };
+    // Show Download Button
+    downloadButton.style.display = 'inline-block';
+    // Show Share Buttons
+    shareButtons.style.display = 'flex';
 });
 
-// Timer
-setTimerButton.addEventListener('click', () => {
-    const seconds = parseInt(timerInput.value);
-    if (seconds > 0) {
-        setTimeout(() => {
-            captureButton.click();
-        }, seconds * 1000);
+// Download Image
+downloadButton.addEventListener('click', () => {
+    const imageURL = canvas.toDataURL('image/png');
+    const link = document.createElement('a');
+    link.href = imageURL;
+    link.download = 'captured-image.png';
+    link.click();
+
+    // Add image to gallery
+    const img = document.createElement('img');
+    img.src = imageURL;
+    gallery.appendChild(img);
+});
+
+// Dark Mode Toggle
+darkModeButton.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+});
+
+// For filters
+filterSelect.addEventListener('change', () => {
+    canvas.style.filter = filterSelect.value;
+});
+
+// Drawing Mode Toggle
+drawingModeButton.addEventListener('click', () => {
+    drawingMode = !drawingMode;
+    if (drawingMode) {
+        drawingModeButton.textContent = "ড্রইং মোড বন্ধ করুন";
+        createDrawingCanvas();
+    } else {
+        drawingModeButton.textContent = "ড্রইং মোড চালু করুন";
+        removeDrawingCanvas();
     }
+});
+
+// Create Drawing Canvas
+function createDrawingCanvas() {
+    const drawingCanvas = document.createElement('canvas');
+    drawingCanvas.id = 'drawing-mode-canvas';
+    drawingCanvas.width = video.videoWidth;
+    drawingCanvas.height = video.videoHeight;
+    document.body.appendChild(drawingCanvas);
+    drawCtx = drawingCanvas.getContext('2d');
+    drawingCanvas.addEventListener('mousedown', startDrawing);
+    drawingCanvas.addEventListener('mousemove', draw);
+    drawingCanvas.addEventListener('mouseup', stopDrawing);
+}
+
+// Remove Drawing Canvas
+function removeDrawingCanvas() {
+    const drawingCanvas = document.getElementById('drawing-mode-canvas');
+    if (drawingCanvas) {
+        drawingCanvas.remove();
+    }
+}
+
+// Drawing function
+let isDrawing = false;
+function startDrawing(e) {
+    isDrawing = true;
+    draw(e);
+}
+
+function draw(e) {
+    if (!isDrawing) return;
+    drawCtx.lineWidth = 5;
+    drawCtx.lineCap = 'round';
+    drawCtx.strokeStyle = 'red';
+    drawCtx.lineTo(e.clientX - video.offsetLeft, e.clientY - video.offsetTop);
+    drawCtx.stroke();
+}
+
+function stopDrawing() {
+    isDrawing = false;
+}
+
+// Share on Facebook
+shareFacebookButton.addEventListener('click', () => {
+    const imageURL = canvas.toDataURL('image/png');
+    const facebookShareURL = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(imageURL)}`;
+    window.open(facebookShareURL, '_blank');
+});
+
+// Share on WhatsApp
+shareWhatsappButton.addEventListener('click', () => {
+    const imageURL = canvas.toDataURL('image/png');
+    const whatsappShareURL = `https://wa.me/?text=${encodeURIComponent(imageURL)}`;
+    window.open(whatsappShareURL, '_blank');
 });
         
