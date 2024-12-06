@@ -1,98 +1,102 @@
-const video = document.getElementById("video");
-const canvas = document.createElement("canvas");
-const filterSelect = document.getElementById("filterSelect");
-const capturedImagesContainer = document.getElementById("capturedImagesContainer");
-const startRecordingButton = document.getElementById("startRecordingButton");
-const stopRecordingButton = document.getElementById("stopRecordingButton");
-const downloadVideoButton = document.getElementById("downloadVideoButton");
-const loadingScreen = document.getElementById("loadingScreen");
-const switchCameraButton = document.getElementById("switchCamera");
+// DOM Elements
+const video = document.getElementById('video');
+const canvas = document.getElementById('canvas');
+const captureButton = document.getElementById('captureButton');
+const startRecordingButton = document.getElementById('startRecordingButton');
+const stopRecordingButton = document.getElementById('stopRecordingButton');
+const downloadVideoButton = document.getElementById('downloadVideoButton');
+const switchCameraButton = document.getElementById('switchCamera');
+const filterSelect = document.getElementById('filterSelect');
+const loadingScreen = document.getElementById('loadingScreen');
+const pipButton = document.getElementById('pipButton');
+
+// Global Variables
+let mediaStream;
 let mediaRecorder;
 let recordedChunks = [];
-let isFrontCamera = true;
+let currentFilter = '';
 
-// Hide loading screen after camera starts
-function hideLoadingScreen() {
-    loadingScreen.style.display = "none";
+// Get User Media
+async function startCamera() {
+    try {
+        mediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        video.srcObject = mediaStream;
+        loadingScreen.style.display = 'none';
+    } catch (error) {
+        alert('Error accessing camera: ' + error.message);
+    }
 }
 
-// Start webcam
-async function startWebcam() {
-    const constraints = {
-        video: { facingMode: isFrontCamera ? "user" : "environment" },
-        audio: { echoCancellation: true, noiseSuppression: true }
-    };
+// Switch Camera
+let isBackCamera = false;
+switchCameraButton.addEventListener('click', () => {
+    isBackCamera = !isBackCamera;
+    const constraints = isBackCamera
+        ? { video: { facingMode: "environment" }, audio: true }
+        : { video: { facingMode: "user" }, audio: true };
 
-    const stream = await navigator.mediaDevices.getUserMedia(constraints);
-    video.srcObject = stream;
-    video.play();
-    hideLoadingScreen();
+    stopCamera();
+    startCamera(constraints);
+});
 
-    // Set up MediaRecorder for video recording
-    mediaRecorder = new MediaRecorder(stream);
+// Apply Filter
+function applyFilter(filter) {
+    video.style.filter = filter;
+    currentFilter = filter;
+}
 
-    mediaRecorder.ondataavailable = (e) => {
-        if (e.data.size > 0) {
-            recordedChunks.push(e.data);
-        }
+// Capture Image
+captureButton.addEventListener('click', () => {
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    const image = canvas.toDataURL('image/png');
+
+    const imgElement = document.createElement('img');
+    imgElement.src = image;
+    document.getElementById('capturedImagesContainer').appendChild(imgElement);
+});
+
+// Start Recording
+startRecordingButton.addEventListener('click', () => {
+    recordedChunks = [];
+    const options = { mimeType: 'video/webm; codecs=vp8' };
+    mediaRecorder = new MediaRecorder(mediaStream, options);
+
+    mediaRecorder.ondataavailable = (event) => {
+        recordedChunks.push(event.data);
     };
 
     mediaRecorder.onstop = () => {
-        const blob = new Blob(recordedChunks, { type: "video/webm" });
-        const url = URL.createObjectURL(blob);
-        downloadVideoButton.href = url;
-        downloadVideoButton.style.display = "inline";
-        downloadVideoButton.innerHTML = "Download Video";
+        const blob = new Blob(recordedChunks, { type: 'video/webm' });
+        const videoUrl = URL.createObjectURL(blob);
+        downloadVideoButton.href = videoUrl;
+        downloadVideoButton.download = 'recorded_video.webm';
+        downloadVideoButton.style.display = 'block';
     };
-}
 
-// Apply filter
-function applyFilter(filter) {
-    video.style.filter = filter;
-}
-
-// Capture image
-document.getElementById("captureButton").addEventListener("click", () => {
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    const ctx = canvas.getContext("2d");
-    ctx.filter = video.style.filter || "none";
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-    const img = new Image();
-    img.src = canvas.toDataURL("image/png");
-    capturedImagesContainer.appendChild(img);
-});
-
-// Start recording
-startRecordingButton.addEventListener("click", () => {
-    recordedChunks = [];
     mediaRecorder.start();
-    startRecordingButton.classList.add("hidden");
-    stopRecordingButton.classList.remove("hidden");
+    startRecordingButton.style.display = 'none';
+    stopRecordingButton.style.display = 'block';
 });
 
-// Stop recording
-stopRecordingButton.addEventListener("click", () => {
+// Stop Recording
+stopRecordingButton.addEventListener('click', () => {
     mediaRecorder.stop();
-    startRecordingButton.classList.remove("hidden");
-    stopRecordingButton.classList.add("hidden");
-});
-
-// Switch camera
-switchCameraButton.addEventListener("click", () => {
-    isFrontCamera = !isFrontCamera;
-    startWebcam();
+    startRecordingButton.style.display = 'block';
+    stopRecordingButton.style.display = 'none';
 });
 
 // Picture-in-Picture
-document.getElementById("pipButton").addEventListener("click", async () => {
-    if (document.pictureInPictureElement) {
-        await document.exitPictureInPicture();
+pipButton.addEventListener('click', () => {
+    if (video !== document.pictureInPictureElement) {
+        video.requestPictureInPicture();
     } else {
-        await video.requestPictureInPicture();
+        document.exitPictureInPicture();
     }
 });
 
-// Start the webcam on page load
-startWebcam();
-        
+// Start Camera when page loads
+startCamera();
+                    
