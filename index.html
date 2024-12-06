@@ -10,7 +10,7 @@
 
     <!-- Navbar -->
     <nav>
-        <div class="logo">Md Mehadi Sarkar</div>
+        <div class="logo">WebCam</div>
         <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌙</button>
     </nav>
 
@@ -18,10 +18,28 @@
     <div class="container">
         <h1>Welcome to Auto Play Camera</h1>
         <p>Click "Capture" to take a snapshot using your webcam!</p>
-        <video id="video" autoplay></video> <!-- Video Stream -->
-        <canvas id="canvas" style="display: none;"></canvas> <!-- Canvas to capture the image -->
-        <button id="capture" class="capture-button">Capture</button> <!-- Capture Button -->
-        <div id="result"></div> <!-- Display Captured Image -->
+        
+        <!-- Video and Canvas -->
+        <video id="video" autoplay></video>
+        <canvas id="canvas" style="display: none;"></canvas>
+        
+        <!-- Buttons -->
+        <button id="capture" class="capture-button">Capture</button>
+        <button id="download" class="capture-button">Download Image</button>
+        <button onclick="startTimer(5)">Take Photo in 5s</button>
+
+        <!-- Filters -->
+        <label for="filters">Choose a Filter:</label>
+        <select id="filters">
+            <option value="">No Filter</option>
+            <option value="grayscale(100%)">Grayscale</option>
+            <option value="sepia(100%)">Sepia</option>
+            <option value="blur(5px)">Blur</option>
+        </select>
+
+        <!-- Gallery -->
+        <h2>Image Gallery</h2>
+        <div id="gallery" class="image-gallery"></div>
     </div>
 
     <!-- Footer -->
