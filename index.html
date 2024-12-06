@@ -3,52 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Camera Capture</title>
+    <title>Webcam Capture with Filters</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="header">
+        <h1>Capture Your Image with Filters</h1>
+        <button id="switchCamera">Switch Camera</button>
+    </div>
 
-    <div class="container">
-        <h1>Welcome to the Camera Capture</h1>
-
-        <div class="camera-controls">
-            <button id="front-camera" class="camera-button">Front Camera</button>
-            <button id="back-camera" class="camera-button">Back Camera</button>
-        </div>
-
+    <div class="camera-container">
         <video id="video" autoplay></video> <!-- Video Stream -->
         <canvas id="canvas" style="display: none;"></canvas> <!-- Canvas to capture the image -->
-        
-        <div class="controls">
-            <label for="filter">Choose Filter:</label>
-            <select id="filter" class="filter-select">
-                <option value="none">None</option>
-                <option value="grayscale(100%)">Grayscale</option>
-                <option value="sepia(100%)">Sepia</option>
-                <option value="invert(100%)">Invert</option>
-                <option value="brightness(1.5)">Brightness</option>
-                <option value="contrast(200%)">Contrast</option>
-                <option value="saturate(2)">Saturate</option>
-                <option value="hue-rotate(90deg)">Hue Rotate</option>
-                <option value="blur(5px)">Blur</option>
-                <!-- Add more filters here -->
-            </select>
-        </div>
-
-        <button id="capture" class="capture-button">Capture</button> <!-- Capture Button -->
-        <button id="download" class="download-button" style="display:none;">Download</button> <!-- Download Button -->
-        
-        <div id="result" class="result"></div> <!-- Display Captured Image -->
-        <div id="share-buttons" style="display:none;">
-            <button id="share-facebook" class="share-button">Share on Facebook</button>
-            <button id="share-whatsapp" class="share-button">Share on WhatsApp</button>
-        </div>
-        
-        <div id="gallery"></div> <!-- Gallery -->
-
     </div>
+
+    <div class="controls">
+        <button id="captureButton">Capture</button>
+        <button id="downloadButton">Download</button>
+    </div>
+
+    <div class="filters">
+        <button class="filter" id="filter-1">Grayscale</button>
+        <button class="filter" id="filter-2">Sepia</button>
+        <button class="filter" id="filter-3">Invert</button>
+        <button class="filter" id="filter-4">Blur</button>
+        <button class="filter" id="filter-5">Brightness</button>
+        <button class="filter" id="filter-6">Contrast</button>
+        <button class="filter" id="filter-7">Saturate</button>
+        <button class="filter" id="filter-8">None</button>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Webcam Capture App</p>
+    </footer>
 
     <script src="script.js"></script>
 </body>
-    </html>
-    
+</html>
