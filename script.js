@@ -1,71 +1,80 @@
-// Get the video element
-const video = document.getElementById('video');
+const video = document.getElementById("video");
+const canvas = document.createElement("canvas");
+const filterSelect = document.getElementById("filterSelect");
+const capturedImagesContainer = document.getElementById("capturedImagesContainer");
+const startRecordingButton = document.getElementById("startRecordingButton");
+const stopRecordingButton = document.getElementById("stopRecordingButton");
+const downloadVideoButton = document.getElementById("downloadVideoButton");
+let mediaRecorder;
+let recordedChunks = [];
 
-// Apply selected filter to video
+// Start webcam
+navigator.mediaDevices.getUserMedia({
+    video: true,
+    audio: {
+        echoCancellation: true,
+        noiseSuppression: true
+    }
+}).then((stream) => {
+    video.srcObject = stream;
+    video.play();
+
+    // Set up MediaRecorder for video recording
+    mediaRecorder = new MediaRecorder(stream);
+
+    mediaRecorder.ondataavailable = (e) => {
+        if (e.data.size > 0) {
+            recordedChunks.push(e.data);
+        }
+    };
+
+    mediaRecorder.onstop = () => {
+        const blob = new Blob(recordedChunks, { type: "video/webm" });
+        const url = URL.createObjectURL(blob);
+        downloadVideoButton.href = url;
+        downloadVideoButton.style.display = "inline";
+        downloadVideoButton.innerHTML = "Download Video";
+    };
+}).catch((error) => console.error("Error accessing webcam: ", error));
+
+// Apply filter
 function applyFilter(filter) {
     video.style.filter = filter;
 }
 
-// Start webcam access
-navigator.mediaDevices.getUserMedia({ video: true })
-    .then(stream => {
-        video.srcObject = stream;
-        document.getElementById('loadingScreen').style.display = 'none';
-    })
-    .catch(err => {
-        console.error("Error accessing webcam: ", err);
-    });
-
-// Capture button functionality
-document.getElementById('captureButton').addEventListener('click', () => {
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
-    
+// Capture image
+document.getElementById("captureButton").addEventListener("click", () => {
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
+    const ctx = canvas.getContext("2d");
+    ctx.filter = video.style.filter || "none";
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-    
-    // Display captured image below
-    const dataUrl = canvas.toDataURL('image/png');
     const img = new Image();
-    img.src = dataUrl;
-    const container = document.getElementById('capturedImagesContainer');
-    container.appendChild(img);
+    img.src = canvas.toDataURL("image/png");
+    capturedImagesContainer.appendChild(img);
 });
 
-// Download captured image
-document.getElementById('downloadButton').addEventListener('click', () => {
-    const canvas = document.getElementById('canvas');
-    const dataUrl = canvas.toDataURL('image/png');
-    
-    const link = document.createElement('a');
-    link.href = dataUrl;
-    link.download = 'captured-image.png';
-    link.click();
+// Start recording
+startRecordingButton.addEventListener("click", () => {
+    recordedChunks = [];
+    mediaRecorder.start();
+    startRecordingButton.style.display = "none";
+    stopRecordingButton.style.display = "inline";
 });
 
-// Switch camera functionality
-document.getElementById('switchCamera').addEventListener('click', () => {
-    navigator.mediaDevices.enumerateDevices().then(devices => {
-        const videoDevices = devices.filter(device => device.kind === 'videoinput');
-        if (videoDevices.length > 1) {
-            const currentStream = video.srcObject;
-            const tracks = currentStream.getTracks();
-            tracks.forEach(track => track.stop());
-            video.srcObject = null;
-            navigator.mediaDevices.getUserMedia({ video: { deviceId: { exact: videoDevices[1].deviceId } } })
-                .then(stream => {
-                    video.srcObject = stream;
-                })
-                .catch(err => console.error("Error switching camera: ", err));
-        }
-    });
+// Stop recording
+stopRecordingButton.addEventListener("click", () => {
+    mediaRecorder.stop();
+    startRecordingButton.style.display = "inline";
+    stopRecordingButton.style.display = "none";
 });
 
-// Picture-in-Picture (PiP) feature
-document.getElementById('pipButton').addEventListener('click', () => {
-    if (video !== null) {
-        video.requestPictureInPicture().catch(error => console.error("Error entering PiP mode: ", error));
+// Picture-in-Picture
+document.getElementById("pipButton").addEventListener("click", async () => {
+    if (document.pictureInPictureElement) {
+        await document.exitPictureInPicture();
+    } else {
+        await video.requestPictureInPicture();
     }
 });
-    
+                                                      
