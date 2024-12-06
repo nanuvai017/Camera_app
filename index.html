@@ -27,11 +27,17 @@
 
         <!-- Control Buttons -->
         <div class="controls">
-            <button id="switchCamera">Switch Camera</button>
+            <!-- Capture Button -->
             <button id="captureButton">Capture</button>
-            <button id="downloadButton">Download</button>
-            <button id="startRecordingButton">Start Recording</button>
-            <button id="stopRecordingButton" style="display:none;">Stop Recording</button>
+
+            <!-- Start and Stop Recording Buttons (on the same row) -->
+            <div class="top-row">
+                <button id="startRecordingButton">Start Recording</button>
+                <button id="stopRecordingButton" style="display:none;">Stop Recording</button>
+            </div>
+
+            <!-- Download Button -->
+            <button id="downloadButton" style="display:none;">Download</button>
         </div>
 
         <!-- Filter Dropdown -->
@@ -51,20 +57,19 @@
             </select>
         </div>
 
-        <!-- Captured Images Section -->
-        <div class="captured-images">
-            <h3>Captured Images</h3>
-            <div id="capturedImagesContainer"></div>
+        <!-- Captured Videos Section -->
+        <div class="captured-videos">
+            <h3>Captured Videos</h3>
+            <div id="capturedVideosContainer"></div>
         </div>
 
         <!-- PiP Mode -->
         <div class="pip-container">
             <button id="pipButton">Picture-in-Picture</button>
         </div>
-   
     </div>
 
     <script src="script.js"></script>
 </body>
-    </html>
-    
+                </html>
+                
