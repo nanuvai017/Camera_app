@@ -5,19 +5,28 @@ const capturedImagesContainer = document.getElementById("capturedImagesContainer
 const startRecordingButton = document.getElementById("startRecordingButton");
 const stopRecordingButton = document.getElementById("stopRecordingButton");
 const downloadVideoButton = document.getElementById("downloadVideoButton");
+const loadingScreen = document.getElementById("loadingScreen");
+const switchCameraButton = document.getElementById("switchCamera");
 let mediaRecorder;
 let recordedChunks = [];
+let isFrontCamera = true;
+
+// Hide loading screen after camera starts
+function hideLoadingScreen() {
+    loadingScreen.style.display = "none";
+}
 
 // Start webcam
-navigator.mediaDevices.getUserMedia({
-    video: true,
-    audio: {
-        echoCancellation: true,
-        noiseSuppression: true
-    }
-}).then((stream) => {
+async function startWebcam() {
+    const constraints = {
+        video: { facingMode: isFrontCamera ? "user" : "environment" },
+        audio: { echoCancellation: true, noiseSuppression: true }
+    };
+
+    const stream = await navigator.mediaDevices.getUserMedia(constraints);
     video.srcObject = stream;
     video.play();
+    hideLoadingScreen();
 
     // Set up MediaRecorder for video recording
     mediaRecorder = new MediaRecorder(stream);
@@ -35,7 +44,7 @@ navigator.mediaDevices.getUserMedia({
         downloadVideoButton.style.display = "inline";
         downloadVideoButton.innerHTML = "Download Video";
     };
-}).catch((error) => console.error("Error accessing webcam: ", error));
+}
 
 // Apply filter
 function applyFilter(filter) {
@@ -58,15 +67,21 @@ document.getElementById("captureButton").addEventListener("click", () => {
 startRecordingButton.addEventListener("click", () => {
     recordedChunks = [];
     mediaRecorder.start();
-    startRecordingButton.style.display = "none";
-    stopRecordingButton.style.display = "inline";
+    startRecordingButton.classList.add("hidden");
+    stopRecordingButton.classList.remove("hidden");
 });
 
 // Stop recording
 stopRecordingButton.addEventListener("click", () => {
     mediaRecorder.stop();
-    startRecordingButton.style.display = "inline";
-    stopRecordingButton.style.display = "none";
+    startRecordingButton.classList.remove("hidden");
+    stopRecordingButton.classList.add("hidden");
+});
+
+// Switch camera
+switchCameraButton.addEventListener("click", () => {
+    isFrontCamera = !isFrontCamera;
+    startWebcam();
 });
 
 // Picture-in-Picture
@@ -77,4 +92,7 @@ document.getElementById("pipButton").addEventListener("click", async () => {
         await video.requestPictureInPicture();
     }
 });
-                                                      
+
+// Start the webcam on page load
+startWebcam();
+        
