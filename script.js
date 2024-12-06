@@ -2,10 +2,14 @@ const video = document.getElementById('video');
 const canvas = document.getElementById('canvas');
 const captureButton = document.getElementById('captureButton');
 const downloadButton = document.getElementById('downloadButton');
+const startRecordingButton = document.getElementById('startRecordingButton');
+const stopRecordingButton = document.getElementById('stopRecordingButton');
 const filters = document.querySelectorAll('.filter');
 const ctx = canvas.getContext('2d');
 let currentFilter = 'none';
 let currentStream;
+let mediaRecorder;
+let recordedChunks = [];
 
 // Access Camera Stream
 navigator.mediaDevices.getUserMedia({ video: true })
@@ -19,22 +23,12 @@ navigator.mediaDevices.getUserMedia({ video: true })
 
 // Capture Image Function
 captureButton.addEventListener('click', () => {
-    // Resize canvas to 4K or 8K resolution
-    const desiredWidth = 3840; // 4K width
-    const desiredHeight = 2160; // 4K height
-    
-    // Resize the canvas to the new resolution
-    canvas.width = desiredWidth;
-    canvas.height = desiredHeight;
-
-    // Draw the video image onto the canvas at the new resolution
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-    // Apply the selected filter (optional)
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
     ctx.filter = currentFilter; // Apply the selected filter
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-    
-    // Display captured image (in high resolution)
+
+    // Display captured image
     const imgData = canvas.toDataURL('image/png');
     const result = document.createElement('img');
     result.src = imgData;
@@ -56,6 +50,37 @@ filters.forEach(button => {
         currentFilter = button.id.replace('filter-', '').toLowerCase();
         console.log("Selected Filter:", currentFilter);
     });
+});
+
+// Start Recording
+startRecordingButton.addEventListener('click', () => {
+    const stream = video.srcObject;
+    mediaRecorder = new MediaRecorder(stream);
+    
+    mediaRecorder.ondataavailable = event => {
+        recordedChunks.push(event.data);
+    };
+
+    mediaRecorder.onstop = () => {
+        const blob = new Blob(recordedChunks, { type: 'video/webm' });
+        const videoURL = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = videoURL;
+        a.download = 'recorded-video.webm';
+        a.click();
+        recordedChunks = []; // Reset the chunks array
+    };
+
+    mediaRecorder.start();
+    startRecordingButton.style.display = 'none';
+    stopRecordingButton.style.display = 'inline';
+});
+
+// Stop Recording
+stopRecordingButton.addEventListener('click', () => {
+    mediaRecorder.stop();
+    startRecordingButton.style.display = 'inline';
+    stopRecordingButton.style.display = 'none';
 });
 
 // Switch Camera
