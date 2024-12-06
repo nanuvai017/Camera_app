@@ -18,6 +18,7 @@ header {
     position: relative;
     display: flex;
     justify-content: center;
+    width: 100%;
 }
 
 video, canvas {
@@ -34,6 +35,7 @@ video, canvas {
     display: flex;
     justify-content: center;
     gap: 10px;
+    flex-wrap: wrap;
 }
 
 button {
@@ -51,12 +53,14 @@ button:hover {
 
 .filters {
     margin-top: 20px;
+    text-align: center;
 }
 
 #filterSelect {
     padding: 8px;
     font-size: 14px;
     margin-top: 10px;
+    width: 200px;
 }
 
 footer {
@@ -84,5 +88,6 @@ footer {
 
     #filterSelect {
         font-size: 12px;
+        width: 80%;
     }
 }
