@@ -11,7 +11,7 @@
     <!-- Main Content -->
     <div class="container">
         <header>
-            <h4>mehadi_X_camera</h4>
+            <h2>mehadi_X_camera</h2>
         </header>
 
         <!-- Permission Request -->
@@ -34,21 +34,16 @@
             <button id="downloadButton" style="display: none;">Download</button>
         </div>
 
-        <!-- Filter Dropdown -->
-        <div class="filter-dropdown" style="display: none;">
-            <select id="filterSelect" onchange="applyFilter(this.value)">
-                <option value="">No Filter</option>
-                <option value="grayscale(100%)">Grayscale</option>
-                <option value="sepia(100%)">Sepia</option>
-                <option value="blur(5px)">Blur</option>
-                <option value="contrast(200%)">Contrast</option>
-                <option value="brightness(150%)">Brightness</option>
-                <option value="invert(100%)">Invert</option>
-                <option value="saturate(200%)">Saturate</option>
-                <option value="hue-rotate(90deg)">Hue Rotate</option>
-                <option value="opacity(50%)">Opacity</option>
-                <option value="drop-shadow(10px 10px 5px rgba(0,0,0,0.5))">Drop Shadow</option>
-            </select>
+        <!-- Captured Images Section -->
+        <div class="captured-images" style="display: none;">
+            <h3>Captured Images</h3>
+            <div id="capturedImagesContainer"></div>
+        </div>
+
+        <!-- Captured Videos Section -->
+        <div class="captured-videos" style="display: none;">
+            <h3>Captured Videos</h3>
+            <div id="capturedVideosContainer"></div>
         </div>
 
         <!-- PiP Mode -->
@@ -60,5 +55,4 @@
 
     <script src="script.js"></script>
 </body>
-                </html>
-                
+</html>
