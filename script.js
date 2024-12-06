@@ -14,11 +14,16 @@ let drawingMode = false;
 
 // Start camera feed
 navigator.mediaDevices.getUserMedia({ video: true })
-    .then(stream => {
+    .then((stream) => {
+        // Attach the stream to the video element
         video.srcObject = stream;
-        video.play();
+
+        // This ensures that the video is playing as soon as the stream is available
+        video.onloadedmetadata = () => {
+            video.play();
+        };
     })
-    .catch(err => {
+    .catch((err) => {
         console.error('Camera access denied or unavailable:', err);
         alert('Please allow camera access to use this feature.');
     });
@@ -83,3 +88,4 @@ setTimerButton.addEventListener('click', () => {
         }, seconds * 1000);
     }
 });
+        
