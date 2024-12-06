@@ -1,102 +1,92 @@
-// DOM Elements
-const video = document.getElementById('video');
-const canvas = document.getElementById('canvas');
-const captureButton = document.getElementById('captureButton');
-const startRecordingButton = document.getElementById('startRecordingButton');
-const stopRecordingButton = document.getElementById('stopRecordingButton');
-const downloadVideoButton = document.getElementById('downloadVideoButton');
-const switchCameraButton = document.getElementById('switchCamera');
-const filterSelect = document.getElementById('filterSelect');
-const loadingScreen = document.getElementById('loadingScreen');
-const pipButton = document.getElementById('pipButton');
+let video = document.getElementById('video');
+let canvas = document.getElementById('canvas');
+let captureButton = document.getElementById('captureButton');
+let downloadButton = document.getElementById('downloadButton');
+let startRecordingButton = document.getElementById('startRecordingButton');
+let stopRecordingButton = document.getElementById('stopRecordingButton');
+let filterSelect = document.getElementById('filterSelect');
+let timerElement = document.getElementById('timer');
+let recordedVideo = document.getElementById('recordedVideo');
+let recordedBlob = null;
+let mediaRecorder = null;
+let stream;
+let timer;
+let seconds = 0;
 
-// Global Variables
-let mediaStream;
-let mediaRecorder;
-let recordedChunks = [];
-let currentFilter = '';
+// Access camera and display on video element
+navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+    .then(s => {
+        stream = s;
+        video.srcObject = stream;
+    })
+    .catch(err => {
+        console.error('Error accessing webcam:', err);
+    });
 
-// Get User Media
-async function startCamera() {
-    try {
-        mediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-        video.srcObject = mediaStream;
-        loadingScreen.style.display = 'none';
-    } catch (error) {
-        alert('Error accessing camera: ' + error.message);
-    }
-}
-
-// Switch Camera
-let isBackCamera = false;
-switchCameraButton.addEventListener('click', () => {
-    isBackCamera = !isBackCamera;
-    const constraints = isBackCamera
-        ? { video: { facingMode: "environment" }, audio: true }
-        : { video: { facingMode: "user" }, audio: true };
-
-    stopCamera();
-    startCamera(constraints);
-});
-
-// Apply Filter
+// Apply selected filter to video
 function applyFilter(filter) {
     video.style.filter = filter;
-    currentFilter = filter;
 }
 
-// Capture Image
+// Capture image from video and show in canvas
 captureButton.addEventListener('click', () => {
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
-    const ctx = canvas.getContext('2d');
+    let ctx = canvas.getContext('2d');
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-    const image = canvas.toDataURL('image/png');
-
-    const imgElement = document.createElement('img');
-    imgElement.src = image;
-    document.getElementById('capturedImagesContainer').appendChild(imgElement);
+    let imgData = canvas.toDataURL('image/png');
+    let img = new Image();
+    img.src = imgData;
+    document.getElementById('capturedImagesContainer').appendChild(img);
 });
 
-// Start Recording
+// Start video recording
 startRecordingButton.addEventListener('click', () => {
-    recordedChunks = [];
-    const options = { mimeType: 'video/webm; codecs=vp8' };
-    mediaRecorder = new MediaRecorder(mediaStream, options);
-
-    mediaRecorder.ondataavailable = (event) => {
-        recordedChunks.push(event.data);
-    };
-
+    mediaRecorder = new MediaRecorder(stream);
+    let chunks = [];
+    
+    mediaRecorder.ondataavailable = event => chunks.push(event.data);
+    
     mediaRecorder.onstop = () => {
-        const blob = new Blob(recordedChunks, { type: 'video/webm' });
-        const videoUrl = URL.createObjectURL(blob);
-        downloadVideoButton.href = videoUrl;
-        downloadVideoButton.download = 'recorded_video.webm';
-        downloadVideoButton.style.display = 'block';
+        recordedBlob = new Blob(chunks, { type: 'video/webm' });
+        recordedVideo.src = URL.createObjectURL(recordedBlob);
+        downloadButton.style.display = 'inline-block';
     };
 
     mediaRecorder.start();
+    startTimer();
     startRecordingButton.style.display = 'none';
-    stopRecordingButton.style.display = 'block';
+    stopRecordingButton.style.display = 'inline-block';
 });
 
-// Stop Recording
+// Stop video recording
 stopRecordingButton.addEventListener('click', () => {
     mediaRecorder.stop();
-    startRecordingButton.style.display = 'block';
+    stopTimer();
+    startRecordingButton.style.display = 'inline-block';
     stopRecordingButton.style.display = 'none';
 });
 
-// Picture-in-Picture
-pipButton.addEventListener('click', () => {
-    if (video !== document.pictureInPictureElement) {
-        video.requestPictureInPicture();
-    } else {
-        document.exitPictureInPicture();
-    }
+// Download recorded video
+downloadButton.addEventListener('click', () => {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(recordedBlob);
+    a.download = 'recorded_video.webm';
+    a.click();
 });
 
-// Start Camera when page loads
-startCamera();
-                    
+// Timer functionality
+function startTimer() {
+    timer = setInterval(() => {
+        seconds++;
+        let minutes = Math.floor(seconds / 60);
+        let secs = seconds % 60;
+        timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }, 1000);
+}
+
+function stopTimer() {
+    clearInterval(timer);
+}
+
+            
