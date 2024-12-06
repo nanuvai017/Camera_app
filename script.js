@@ -1,85 +1,78 @@
 const video = document.getElementById('video');
 const canvas = document.getElementById('canvas');
-const captureButton = document.getElementById('capture');
-const downloadButton = document.getElementById('download');
-const filterSelect = document.getElementById('filter');
-const gallery = document.getElementById('gallery');
-const timerDisplay = document.getElementById('timer');
-const shareButtons = document.getElementById('share-buttons');
-const shareFacebookButton = document.getElementById('share-facebook');
-const shareWhatsappButton = document.getElementById('share-whatsapp');
-const frontCameraButton = document.getElementById('front-camera');
-const backCameraButton = document.getElementById('back-camera');
-
+const captureButton = document.getElementById('captureButton');
+const downloadButton = document.getElementById('downloadButton');
+const filters = document.querySelectorAll('.filter');
 const ctx = canvas.getContext('2d');
-let currentStream = null;
+let currentFilter = 'none';
+let currentStream;
 
-function startCamera(facingMode = 'user') {
-    if (currentStream) {
-        currentStream.getTracks().forEach(track => track.stop());
-    }
-    navigator.mediaDevices.getUserMedia({
-        video: { facingMode: facingMode }
-    })
+// Access Camera Stream
+navigator.mediaDevices.getUserMedia({ video: true })
     .then(stream => {
         currentStream = stream;
         video.srcObject = stream;
     })
     .catch(err => {
-        console.error("Error accessing the camera:", err);
+        console.error("Error accessing camera:", err);
     });
-}
 
-// Start with front camera
-startCamera('user');
-
-// Switch to front camera
-frontCameraButton.addEventListener('click', () => {
-    startCamera('user');
-});
-
-// Switch to back camera
-backCameraButton.addEventListener('click', () => {
-    startCamera('environment');
-});
-
-// Capture Image
+// Capture Image Function
 captureButton.addEventListener('click', () => {
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    ctx.filter = filterSelect.value;
+    // Resize canvas to 4K or 8K resolution
+    const desiredWidth = 3840; // 4K width
+    const desiredHeight = 2160; // 4K height
+    
+    // Resize the canvas to the new resolution
+    canvas.width = desiredWidth;
+    canvas.height = desiredHeight;
+
+    // Draw the video image onto the canvas at the new resolution
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-    // Show Download Button
-    downloadButton.style.display = 'inline-block';
-    // Show Share Buttons
-    shareButtons.style.display = 'flex';
+    // Apply the selected filter (optional)
+    ctx.filter = currentFilter; // Apply the selected filter
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    
+    // Display captured image (in high resolution)
+    const imgData = canvas.toDataURL('image/png');
+    const result = document.createElement('img');
+    result.src = imgData;
+    document.body.appendChild(result);
 });
 
-// Download Image
+// Download the captured image
 downloadButton.addEventListener('click', () => {
-    const imageURL = canvas.toDataURL('image/png');
-    const link = document.createElement('a');
-    link.href = imageURL;
-    link.download = 'captured-image.png';
-    link.click();
-
-    // Add image to gallery
-    const img = document.createElement('img');
-    img.src = imageURL;
-    gallery.appendChild(img);
+    const imgData = canvas.toDataURL('image/png');
+    const a = document.createElement('a');
+    a.href = imgData;
+    a.download = 'captured-image.png';
+    a.click();
 });
 
-// Share on Facebook
-shareFacebookButton.addEventListener('click', () => {
-    const imageURL = canvas.toDataURL('image/png');
-    const facebookShareURL = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(imageURL)}`;
-    window.open(facebookShareURL, '_blank');
+// Apply Filters
+filters.forEach(button => {
+    button.addEventListener('click', () => {
+        currentFilter = button.id.replace('filter-', '').toLowerCase();
+        console.log("Selected Filter:", currentFilter);
+    });
 });
 
-// Share on WhatsApp
-shareWhatsappButton.addEventListener('click', () => {
-    const imageURL = canvas.toDataURL('image/png');
-    const whatsappShareURL = `https://wa.me/?text=${encodeURIComponent(imageURL)}`;
-    window.open(whatsappShareURL, '_blank');
+// Switch Camera
+document.getElementById('switchCamera').addEventListener('click', () => {
+    if (currentStream) {
+        currentStream.getTracks().forEach(track => track.stop()); // Stop the current stream
+    }
+    navigator.mediaDevices.enumerateDevices().then(devices => {
+        const videoDevices = devices.filter(device => device.kind === 'videoinput');
+        const backCamera = videoDevices.find(device => device.label.toLowerCase().includes('back')) || videoDevices[0];
+        navigator.mediaDevices.getUserMedia({ video: { deviceId: backCamera.deviceId } })
+            .then(stream => {
+                currentStream = stream;
+                video.srcObject = stream;
+            })
+            .catch(err => {
+                console.error("Error switching camera:", err);
+            });
+    });
 });
