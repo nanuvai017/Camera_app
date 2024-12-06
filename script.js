@@ -5,41 +5,43 @@ const downloadButton = document.getElementById('download');
 const filterSelect = document.getElementById('filter');
 const gallery = document.getElementById('gallery');
 const timerDisplay = document.getElementById('timer');
-const drawingModeButton = document.getElementById('drawing-mode-toggle');
-const darkModeButton = document.getElementById('dark-mode-toggle');
 const shareButtons = document.getElementById('share-buttons');
 const shareFacebookButton = document.getElementById('share-facebook');
 const shareWhatsappButton = document.getElementById('share-whatsapp');
+const frontCameraButton = document.getElementById('front-camera');
+const backCameraButton = document.getElementById('back-camera');
 
 const ctx = canvas.getContext('2d');
-let seconds = 0;
-let minutes = 0;
-let timerInterval;
-let drawingMode = false;
-let drawCtx;
+let currentStream = null;
 
-// Start camera stream
-navigator.mediaDevices.getUserMedia({ video: true })
+function startCamera(facingMode = 'user') {
+    if (currentStream) {
+        currentStream.getTracks().forEach(track => track.stop());
+    }
+    navigator.mediaDevices.getUserMedia({
+        video: { facingMode: facingMode }
+    })
     .then(stream => {
+        currentStream = stream;
         video.srcObject = stream;
     })
     .catch(err => {
-        console.error("ক্যামেরা অ্যাক্সেস করতে সমস্যা:", err);
+        console.error("Error accessing the camera:", err);
     });
-
-// Start Timer
-function startTimer() {
-    timerInterval = setInterval(() => {
-        seconds++;
-        if (seconds === 60) {
-            seconds = 0;
-            minutes++;
-        }
-        timerDisplay.textContent = `${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
-    }, 1000);
 }
 
-startTimer();
+// Start with front camera
+startCamera('user');
+
+// Switch to front camera
+frontCameraButton.addEventListener('click', () => {
+    startCamera('user');
+});
+
+// Switch to back camera
+backCameraButton.addEventListener('click', () => {
+    startCamera('environment');
+});
 
 // Capture Image
 captureButton.addEventListener('click', () => {
@@ -68,69 +70,6 @@ downloadButton.addEventListener('click', () => {
     gallery.appendChild(img);
 });
 
-// Dark Mode Toggle
-darkModeButton.addEventListener('click', () => {
-    document.body.classList.toggle('dark-mode');
-});
-
-// For filters
-filterSelect.addEventListener('change', () => {
-    canvas.style.filter = filterSelect.value;
-});
-
-// Drawing Mode Toggle
-drawingModeButton.addEventListener('click', () => {
-    drawingMode = !drawingMode;
-    if (drawingMode) {
-        drawingModeButton.textContent = "ড্রইং মোড বন্ধ করুন";
-        createDrawingCanvas();
-    } else {
-        drawingModeButton.textContent = "ড্রইং মোড চালু করুন";
-        removeDrawingCanvas();
-    }
-});
-
-// Create Drawing Canvas
-function createDrawingCanvas() {
-    const drawingCanvas = document.createElement('canvas');
-    drawingCanvas.id = 'drawing-mode-canvas';
-    drawingCanvas.width = video.videoWidth;
-    drawingCanvas.height = video.videoHeight;
-    document.body.appendChild(drawingCanvas);
-    drawCtx = drawingCanvas.getContext('2d');
-    drawingCanvas.addEventListener('mousedown', startDrawing);
-    drawingCanvas.addEventListener('mousemove', draw);
-    drawingCanvas.addEventListener('mouseup', stopDrawing);
-}
-
-// Remove Drawing Canvas
-function removeDrawingCanvas() {
-    const drawingCanvas = document.getElementById('drawing-mode-canvas');
-    if (drawingCanvas) {
-        drawingCanvas.remove();
-    }
-}
-
-// Drawing function
-let isDrawing = false;
-function startDrawing(e) {
-    isDrawing = true;
-    draw(e);
-}
-
-function draw(e) {
-    if (!isDrawing) return;
-    drawCtx.lineWidth = 5;
-    drawCtx.lineCap = 'round';
-    drawCtx.strokeStyle = 'red';
-    drawCtx.lineTo(e.clientX - video.offsetLeft, e.clientY - video.offsetTop);
-    drawCtx.stroke();
-}
-
-function stopDrawing() {
-    isDrawing = false;
-}
-
 // Share on Facebook
 shareFacebookButton.addEventListener('click', () => {
     const imageURL = canvas.toDataURL('image/png');
@@ -144,4 +83,3 @@ shareWhatsappButton.addEventListener('click', () => {
     const whatsappShareURL = `https://wa.me/?text=${encodeURIComponent(imageURL)}`;
     window.open(whatsappShareURL, '_blank');
 });
-        
