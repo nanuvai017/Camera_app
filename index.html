@@ -7,11 +7,6 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Loading Screen -->
-    <div id="loadingScreen">
-        <div class="loading-text">Loading...</div>
-    </div>
-
     <!-- Main Content -->
     <div class="container">
         <header>
@@ -28,9 +23,9 @@
         <div class="controls">
             <button id="switchCamera">Switch Camera</button>
             <button id="captureButton">Capture</button>
-            <button id="downloadButton">Download</button>
             <button id="startRecordingButton">Start Recording</button>
             <button id="stopRecordingButton" style="display:none;">Stop Recording</button>
+            <button id="downloadVideoButton" style="display:none;">Download Video</button>
         </div>
 
         <!-- Filter Dropdown -->
@@ -46,7 +41,6 @@
                 <option value="saturate(200%)">Saturate</option>
                 <option value="hue-rotate(90deg)">Hue Rotate</option>
                 <option value="opacity(50%)">Opacity</option>
-                <option value="drop-shadow(10px 10px 5px rgba(0,0,0,0.5))">Drop Shadow</option>
             </select>
         </div>
 
