@@ -40,7 +40,8 @@ function addToGallery() {
     gallery.appendChild(img);
 }
 
-// Apply filter
+// Apply Filters Dynamically
+const filters = document.getElementById('filters');
 filters.addEventListener('change', () => {
     video.style.filter = filters.value;
 });
