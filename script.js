@@ -1,62 +1,71 @@
-// Loading Screen
-document.getElementById('loadingScreen').style.display = 'flex';
+// Get the video element
+const video = document.getElementById('video');
 
-// Access camera
+// Apply selected filter to video
+function applyFilter(filter) {
+    video.style.filter = filter;
+}
+
+// Start webcam access
 navigator.mediaDevices.getUserMedia({ video: true })
     .then(stream => {
-        document.getElementById('video').srcObject = stream;
+        video.srcObject = stream;
         document.getElementById('loadingScreen').style.display = 'none';
     })
-    .catch(err => console.log("Error accessing camera: ", err));
+    .catch(err => {
+        console.error("Error accessing webcam: ", err);
+    });
 
-// Switch Camera
-document.getElementById('switchCamera').addEventListener('click', () => {
-    navigator.mediaDevices.enumerateDevices()
-        .then(devices => {
-            const videoDevices = devices.filter(device => device.kind === 'videoinput');
-            const currentStream = document.getElementById('video').srcObject;
-            const tracks = currentStream.getTracks();
-            tracks.forEach(track => track.stop());
-            navigator.mediaDevices.getUserMedia({ video: { deviceId: { exact: videoDevices[1].deviceId } } })
-                .then(stream => {
-                    document.getElementById('video').srcObject = stream;
-                });
-        });
-});
-
-// Capture Image
+// Capture button functionality
 document.getElementById('captureButton').addEventListener('click', () => {
     const canvas = document.getElementById('canvas');
-    const video = document.getElementById('video');
+    const ctx = canvas.getContext('2d');
+    
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
-    canvas.getContext('2d').drawImage(video, 0, 0);
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    
+    // Display captured image below
+    const dataUrl = canvas.toDataURL('image/png');
+    const img = new Image();
+    img.src = dataUrl;
+    const container = document.getElementById('capturedImagesContainer');
+    container.appendChild(img);
 });
 
-// Download Image
+// Download captured image
 document.getElementById('downloadButton').addEventListener('click', () => {
     const canvas = document.getElementById('canvas');
+    const dataUrl = canvas.toDataURL('image/png');
+    
     const link = document.createElement('a');
-    link.download = 'captured_image.png';
-    link.href = canvas.toDataURL();
+    link.href = dataUrl;
+    link.download = 'captured-image.png';
     link.click();
 });
 
-// Apply Filter
-function applyFilter(filter) {
-    document.getElementById('video').style.filter = filter;
-}
+// Switch camera functionality
+document.getElementById('switchCamera').addEventListener('click', () => {
+    navigator.mediaDevices.enumerateDevices().then(devices => {
+        const videoDevices = devices.filter(device => device.kind === 'videoinput');
+        if (videoDevices.length > 1) {
+            const currentStream = video.srcObject;
+            const tracks = currentStream.getTracks();
+            tracks.forEach(track => track.stop());
+            video.srcObject = null;
+            navigator.mediaDevices.getUserMedia({ video: { deviceId: { exact: videoDevices[1].deviceId } } })
+                .then(stream => {
+                    video.srcObject = stream;
+                })
+                .catch(err => console.error("Error switching camera: ", err));
+        }
+    });
+});
 
-// Video Speed Control
-function changeSpeed() {
-    const video = document.getElementById('video');
-    video.playbackRate = document.getElementById('speedControl').value;
-}
-
-// Picture-in-Picture
+// Picture-in-Picture (PiP) feature
 document.getElementById('pipButton').addEventListener('click', () => {
-    const video = document.getElementById('video');
-    if (video.requestPictureInPicture) {
-        video.requestPictureInPicture();
+    if (video !== null) {
+        video.requestPictureInPicture().catch(error => console.error("Error entering PiP mode: ", error));
     }
 });
+    
